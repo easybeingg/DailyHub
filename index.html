@@ -20,7 +20,7 @@
   --accent:#007aff; --green:#34c759; --red:#ff3b30; --orange:#ff9500; --gray:#8e8e93;
   --green-t:rgba(52,199,89,.16); --red-t:rgba(255,59,48,.14); --orange-t:rgba(255,149,0,.18);
   --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.04);
-  --sheet:#f2f2f7; --row:#fff; --bar:rgba(249,249,249,.88); --segon:#fff;
+  --sheet:#f2f2f7; --row:#fff; --bar:rgba(249,249,249,.88); --segon:#fff; --tintp:16%;
   color-scheme:light dark;
 }
 @media (prefers-color-scheme: dark){
@@ -30,7 +30,7 @@
     --label:#fff; --label2:rgba(235,235,245,.6); --label3:rgba(235,235,245,.3); --sep:rgba(84,84,88,.55);
     --accent:#0a84ff; --green:#30d158; --red:#ff453a; --orange:#ff9f0a; --gray:#8e8e93;
     --green-t:rgba(48,209,88,.2); --red-t:rgba(255,69,58,.2); --orange-t:rgba(255,159,10,.22);
-    --shadow:none; --sheet:#1c1c1e; --row:#2c2c2e; --bar:rgba(22,22,22,.88); --segon:#636366;
+    --shadow:none; --sheet:#1c1c1e; --row:#2c2c2e; --bar:rgba(22,22,22,.88); --segon:#636366; --tintp:28%;
   }
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -135,6 +135,35 @@ svg{display:block}
 .hrow{padding:14px 14px 14px 16px}
 .htop{display:flex;align-items:center;gap:12px}
 .hn{flex:1;min-width:0}
+button.hn{display:block;text-align:left}
+.hl{display:flex;align-items:center;gap:4px}
+.hl .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.hl svg{width:13px;height:13px;flex:none;color:var(--label3);stroke-width:2.8}
+.pick{margin-left:auto;width:24px;height:24px;border-radius:50%;border:2px solid var(--label3);display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.gbtn .pick svg{width:13px;height:13px;opacity:0;stroke-width:3.2}
+.pick.on{background:var(--accent);border-color:var(--accent)}
+.gbtn .pick.on svg{opacity:1}
+.mdots{display:flex;gap:3px;flex:none}
+.mdots i{width:9px;height:9px;border-radius:50%}
+.lhead{text-align:center;padding:4px 16px 2px}
+.lname{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.lsub{font-size:14px;color:var(--label2);margin-top:3px}
+.ltiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.ltiles .tile{background:var(--row)}
+.lg-row{width:100%;text-align:left;font-size:16px;gap:12px}
+.lg-d{flex:none;min-width:104px;color:var(--label2);font-size:15px}
+.lg-v{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-v.g{color:var(--green)} .lg-v.r{color:var(--red)} .lg-v.o{color:var(--orange)}
+.lg-edit{padding:4px 16px 14px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.hx{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--label3);flex:none}
+.hx svg{width:14px;height:14px}
+.grow input[type=date]{min-height:22px}
+.colors button.nb{background:linear-gradient(135deg,transparent 45%,var(--red) 45%,var(--red) 55%,transparent 55%),var(--row);box-shadow:inset 0 0 0 1.5px var(--label3)}
+.colors button.nb.on{box-shadow:inset 0 0 0 1.5px var(--label3),0 0 0 2.5px var(--row),0 0 0 4.5px var(--label2)}
+.hrow.hid{opacity:.55}
+.hidnote{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:12px;font-size:14px;color:var(--label2);text-align:center}
+.hidnote svg{width:17px;height:17px}
+.more{width:100%;height:44px;color:var(--accent);font-size:16px;text-align:center}
 .hname{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hsub{font-size:14px;color:var(--label3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hsub.g{color:var(--green)} .hsub.r{color:var(--red)} .hsub.o{color:var(--orange)}
@@ -321,7 +350,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 <script>
 (function(){
 'use strict';
-var VERSION='1.3';
+var VERSION='1.6';
 var KEY='hh_data_v1', UIKEY='hh_ui_v1', SKEY='hh_sync_v1';
 var DEFAULT_URL='https://arqdaubaruecjwzgcuhe.supabase.co';
 var TABLE='habithub_data';
@@ -377,13 +406,16 @@ var I={
   cloud:svg('<path d="M7 18.5h10.5a3.8 3.8 0 00.4-7.6A5.6 5.6 0 007 9.3a4.6 4.6 0 000 9.2z"/>'),
   sync:svg('<path d="M20 11a8 8 0 00-14.3-4.3M4 13a8 8 0 0014.3 4.3"/><path d="M5 3v4h4M19 21v-4h-4"/>'),
   palette:svg('<path d="M12 3.5a8.5 8.5 0 100 17c1.2 0 1.8-.8 1.8-1.7 0-1.3-1.1-1.6-1.1-2.7 0-1 .8-1.6 1.9-1.6h2a3.9 3.9 0 003.9-3.9C20.5 6.8 16.7 3.5 12 3.5z"/><circle cx="8" cy="11" r="1.2" fill="currentColor" stroke="none"/><circle cx="10.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="14.8" cy="7.8" r="1.2" fill="currentColor" stroke="none"/>'),
-  out:svg('<path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4M9 16l-4-4 4-4M5 12h11"/>')
+  out:svg('<path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4M9 16l-4-4 4-4M5 12h11"/>'),
+  eye:svg('<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>'),
+  eyeOff:svg('<path d="M10.6 5.6A9.6 9.6 0 0112 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 01-2.9 3.7M6.6 6.6C3.9 8.3 2.5 12 2.5 12S6 18.5 12 18.5c1.8 0 3.3-.5 4.6-1.2M9.9 9.9a3 3 0 004.2 4.2M3 3l18 18"/>'),
+  list:svg('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>')
 };
 
 /* ---------- data ---------- */
 function opt(label,i,goal){return {id:uid(),label:label,goal:!!goal,c:COLORS[i%COLORS.length]}}
 function emptyProfile(){return {name:'',photo:'',age:'',height:'',gender:'',bio:'',u:0}}
-function mkHabit(name,type,options,o){return {id:uid(),name:name,type:type,options:options||[],created:today(),days:ALLDAYS.slice(),pauses:[],archived:null,o:o,u:1}}
+function mkHabit(name,type,options,o){return {id:uid(),name:name,type:type,options:options||[],created:today(),days:ALLDAYS.slice(),pauses:[],archived:null,o:o,u:1,c:COLORS[o%COLORS.length],note:'',hist:[{d:today(),t:'Created'}]}}
 function mkWorkout(name,c,o){return {id:uid(),name:name,c:c,created:today(),archived:null,o:o,u:1}}
 function seedWorkouts(){return [mkWorkout('Push day','#ff9500',0),mkWorkout('Pull day','#007aff',1),mkWorkout('Leg day','#af52de',2),mkWorkout('Running','#34c759',3)]}
 function seed(){
@@ -392,7 +424,7 @@ function seed(){
       mkHabit('Wake up at 8:00','single',[opt('8:00',0,true),opt('8:15',1),opt('8:30',2),opt('8:45',3),opt('9:00+',4)],0),
       mkHabit('No smoking','check',[],1),
       mkHabit('Learning','multi',[opt('Reading',6),opt('Podcast',4),opt('Course',5)],2)
-    ],workouts:seedWorkouts(),log:{},lt:{},wlog:{},wt:{},del:{}};
+    ],workouts:seedWorkouts(),log:{},lt:{},wlog:{},wt:{},del:{},restC:'#8e8e93',restU:0};
 }
 function valid(d){return isObj(d)&&Array.isArray(d.habits)&&isObj(d.log)}
 function sortItems(d){d.habits.sort(function(a,b){return a.o-b.o});d.workouts.sort(function(a,b){return a.o-b.o})}
@@ -404,6 +436,11 @@ function norm(d){
   d.habits.forEach(function(h,i){
     h.options=Array.isArray(h.options)?h.options.filter(function(o){return o&&o.id}):[];
     h.options.forEach(function(o,j){if(!o.c)o.c=COLORS[j%COLORS.length];o.goal=!!o.goal;o.label=String(o.label||'')});
+    if(!h.c)h.c=COLORS[i%COLORS.length];
+    if(typeof h.note!=='string')h.note='';
+    if(!Array.isArray(h.hist))h.hist=[];
+    h.hidden=h.hidden===true;
+    if(!h.bg)h.bg=null;
     if(!h.created)h.created=today();
     if(!Array.isArray(h.days)||!h.days.length)h.days=ALLDAYS.slice();
     if(!Array.isArray(h.pauses))h.pauses=[];
@@ -424,6 +461,8 @@ function norm(d){
   if(!isObj(d.lt)){d.lt={};Object.keys(d.log).forEach(function(ds){Object.keys(d.log[ds]).forEach(function(hid){d.lt[ds+'|'+hid]=1})})}
   if(!isObj(d.wt)){d.wt={};Object.keys(d.wlog).forEach(function(ds){d.wt[ds]=1})}
   if(!isObj(d.del))d.del={};
+  if(!d.restC)d.restC='#8e8e93';
+  if(typeof d.restU!=='number')d.restU=0;
   d.pristine=d.pristine===true;
   sortItems(d);
   d.v=3;
@@ -459,6 +498,7 @@ function merge(a,b){
   [a.del,b.del].forEach(function(m){Object.keys(m).forEach(function(k){if(!(out.del[k]>=m[k]))out.del[k]=m[k]})});
   out.habits=mergeItems(a.habits,b.habits,out.del);
   out.workouts=mergeItems(a.workouts,b.workouts,out.del);
+  var rs=(b.restU||0)>(a.restU||0)?b:a;out.restC=rs.restC||'#8e8e93';out.restU=Math.max(a.restU||0,b.restU||0);
   var hids={};out.habits.forEach(function(h){hids[h.id]=1});
   var keys={};Object.keys(a.lt).concat(Object.keys(b.lt)).forEach(function(k){keys[k]=1});
   Object.keys(keys).forEach(function(k){
@@ -510,6 +550,7 @@ function status(h,v){
 function logged(h,ds){return status(h,val(ds,h))!==null}
 function activePause(h){for(var i=0;i<h.pauses.length;i++)if(!h.pauses[i].to)return h.pauses[i];return null}
 function applies(h,ds){
+  if(h.hidden)return false;
   if(ds<h.created)return false;
   if(h.archived&&ds>=h.archived)return false;
   if(h.days.indexOf(dow(ds))<0)return false;
@@ -517,6 +558,8 @@ function applies(h,ds){
   return true;
 }
 function activeHabits(){return S.habits.filter(function(h){return !h.archived})}
+function shownHabits(){return S.habits.filter(function(h){return !h.archived&&!h.hidden})}
+function tintStyle(h){return h.bg?' style="background:color-mix(in srgb,'+h.bg+' var(--tintp),var(--card))"':''}
 function streak(h){
   var ds=today(),st=status(h,val(ds,h));
   if(st==='miss')return 0;
@@ -535,6 +578,7 @@ function W(id){for(var i=0;i<S.workouts.length;i++)if(S.workouts[i].id===id)retu
 function wraw(ds){return S.wlog[ds]||[]}
 function wdone(ds){return wraw(ds).map(W).filter(Boolean).sort(function(a,b){return a.o-b.o})}
 function isRest(ds){return wraw(ds).indexOf(REST)>-1}
+function restItem(){return {id:REST,name:'Rest day',c:S.restC||'#8e8e93'}}
 function wLogged(ds){return wraw(ds).some(function(x){return x===REST||W(x)})}
 function wReq(ds){return S.workouts.some(function(w){return w.created<=ds&&(!w.archived||ds<w.archived)})}
 function setW(ds,arr){if(arr.length)S.wlog[ds]=arr;else delete S.wlog[ds];S.wt[ds]=Date.now();touch()}
@@ -568,7 +612,7 @@ function monthStats(y,m,lim){
     if(r.need){s.tracked++;if(isDone(r))s.done++;else if(ds<t)s.inc++}
     var dn=wdone(ds);
     if(dn.length){s.wd++;s.ses+=dn.length;dn.forEach(function(w){s.per[w.id]=(s.per[w.id]||0)+1})}
-    else if(isRest(ds))s.rest++;
+    else if(isRest(ds)){s.rest++;s.per[REST]=(s.per[REST]||0)+1}
   }
   return s;
 }
@@ -599,7 +643,12 @@ function doneStreaks(){
 function viewInfo(){
   var v=ui.view;
   if(v.indexOf('h:')===0){var h=H(v.slice(2));if(h&&!h.archived)return {k:'h',x:h}}
-  else if(v.indexOf('w:')===0){var w=W(v.slice(2));if(w&&!w.archived)return {k:'w',x:w}}
+  else if(v.indexOf('w:')===0){var w=v.slice(2)===REST?restItem():W(v.slice(2));if(w&&!w.archived)return {k:'w',x:w}}
+  else if(v.indexOf('m:')===0){
+    var its=v.slice(2).split(',').map(viewItem).filter(Boolean);
+    if(its.length>1)return {k:'m',items:its};
+    if(its.length===1){ui.view=its[0].key;return viewInfo()}
+  }
   else if(v==='wall')return {k:'wall'};
   ui.view='all';return {k:'all'};
 }
@@ -639,7 +688,7 @@ function renderCalendar(){
   var pill;
   if(v.k==='all')pill='<button class="pill" data-a="focus-pick">'+I.grid+'<span class="pl">Overview</span><span class="chev">'+I.chevD+'</span></button>';
   else{
-    var inner=v.k==='wall'?I.dumbbell+'<span class="pl">All workouts</span>':v.k==='w'?'<span class="pdot" style="background:'+f.c+'"></span><span class="pl">'+esc(f.name)+'</span>':'<span class="pl">'+esc(f.name)+'</span>';
+    var inner=v.k==='m'?'<span class="mdots">'+v.items.slice(0,4).map(function(it){return '<i style="background:'+it.c+'"></i>'}).join('')+'</span><span class="pl">'+v.items.length+' selected</span>':v.k==='wall'?I.dumbbell+'<span class="pl">All workouts</span>':v.k==='w'?'<span class="pdot" style="background:'+f.c+'"></span><span class="pl">'+esc(f.name)+'</span>':'<span class="pl">'+esc(f.name)+'</span>';
     pill='<button class="pill" data-a="focus-pick">'+inner+'<span class="chev">'+I.chevD+'</span></button><button class="pill-x" data-a="focus-clear" aria-label="Back to overview">'+I.x+'</button>';
   }
   return '<section class="card cal">'+
@@ -667,7 +716,10 @@ function dayCell(date,v){
     }else if(v.k==='wall'){
       var dn=wdone(ds);
       if(dn.length)c.under=dn.slice(0,4).map(function(w){return '<span class="cd" style="background:'+w.c+'"></span>'}).join('');
-      else if(isRest(ds))c.under='<span class="ul n">Rest</span>';
+      else if(isRest(ds))c.under='<span class="cd" style="background:'+restItem().c+'"></span>';
+    }else if(v.k==='m'){
+      var onI=v.items.filter(function(it){return it.on(ds)}),relI=v.items.filter(function(it){return it.on(ds)||it.rel(ds)});
+      if(onI.length){c.under=onI.slice(0,5).map(function(it){return '<span class="cd" style="background:'+it.c+'"></span>'}).join('');if(onI.length===relI.length)c.cls='tint-g'}
     }else if(v.k==='w'){
       if(wraw(ds).indexOf(v.x.id)>-1){c.cls='full-c';c.style='background:'+v.x.c}
     }else{
@@ -687,6 +739,7 @@ function dayCell(date,v){
 function li(c,l){return '<span><i style="background:'+c+'"></i>'+l+'</span>'}
 function legend(v){
   if(v.k==='all')return '<div class="legend">'+li('var(--green)','Done')+li('var(--orange)','Incomplete')+'</div>';
+  if(v.k==='m')return '<div class="legend">'+v.items.map(function(it){return li(it.c,esc(it.name))}).join('')+'</div>';
   if(v.k==='w')return '<div class="legend">'+li(v.x.c,esc(v.x.name)+' done')+'</div>';
   if(v.k==='wall'){
     var ws=monthWorkouts();
@@ -700,7 +753,7 @@ function legend(v){
 /* active workouts + archived ones that were done this month */
 function monthWorkouts(){
   var st=monthStats(ui.month.getFullYear(),ui.month.getMonth());
-  return S.workouts.filter(function(w){return !w.archived||st.per[w.id]});
+  return S.workouts.filter(function(w){return !w.archived||st.per[w.id]}).concat([restItem()]);
 }
 function tile(v,l,c,extra){return '<div class="tile"><div class="tv '+(c||'')+'">'+v+'</div><div class="tl">'+l+'</div>'+(extra||'')+'</div>'}
 function delta(cur,prev,better,pm){
@@ -727,6 +780,17 @@ function summary(v){
   var t=today(),first=ymd(new Date(y,m,1));
   if(first>t)return '<div class="sum"><div class="sum-h">'+mn+'</div><div class="tl">Nothing to show yet.</div></div>';
   if(v.k==='all')return '<div class="sum"><div class="sum-h">'+mn+' overview</div>'+overviewTiles(y,m)+'</div>';
+  if(v.k==='m'){
+    var mc=v.items.map(function(){return 0}),alld=0,part=0,dim=new Date(y,m+1,0).getDate();
+    for(var q=1;q<=dim;q++){
+      var dq=ymd(new Date(y,m,q));if(dq>t)break;
+      var rel=0,onn=0;
+      v.items.forEach(function(it,k){var o=it.on(dq);if(o)mc[k]++;if(o||it.rel(dq)){rel++;if(o)onn++}});
+      if(rel){if(onn===rel)alld++;else if(dq<t)part++}
+    }
+    return '<div class="sum"><div class="sum-h">Selected in '+mn+'</div><div class="tiles">'+tile(alld,'All done','g')+tile(part,'Not all','o')+tile(v.items.length,'Selected')+'</div>'+
+      bars(v.items.map(function(it,k){return {l:'<span class="cd" style="background:'+it.c+'"></span>'+esc(it.name),n:mc[k],c:it.c}}))+'</div>';
+  }
   if(v.k==='wall'){
     var c=compareMonth(y,m),a=c.a,b=c.b,full=monthStats(y,m);
     return '<div class="sum"><div class="sum-h">Workouts in '+mn+'</div><div class="tiles">'+
@@ -766,7 +830,7 @@ function dayHead(showEdit){
     '<div class="sec-title">'+esc(d.getDate()+' '+monthName(d)+(d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():''))+'</div></div>'+
     (showEdit?'<button class="txt" data-a="edit-toggle">'+(ui.edit?'Done':'Edit')+'</button>':'')+'</div>';
 }
-var TYPE_LABEL={check:'Yes / No',single:'One answer',multi:'Multiple answers'};
+var TYPE_LABEL={check:'Done / Missed',single:'Single choice',multi:'Multiple choice'};
 function editBtns(kind,id,i,len){
   return '<div class="ebtns"><button data-a="'+kind+'-up" data-id="'+id+'"'+(i===0?' disabled':'')+' aria-label="Move up">'+I.up+'</button>'+
     '<button data-a="'+kind+'-down" data-id="'+id+'"'+(i===len-1?' disabled':'')+' aria-label="Move down">'+I.down+'</button>'+
@@ -781,11 +845,13 @@ function renderHabitsDay(){
   if(ui.edit){
     return head+'<div class="list">'+act.map(function(h,i){
       var p=activePause(h);
-      return '<div class="card hrow"><div class="htop"><div class="hn"><div class="hname">'+esc(h.name)+'</div><div class="hsub">'+
-        TYPE_LABEL[h.type]+' · '+(p?'Paused':daysText(h.days))+'</div></div>'+editBtns('h',h.id,i,act.length)+'</div></div>';
+      return '<div class="card hrow'+(h.hidden?' hid':'')+'"'+tintStyle(h)+'><div class="htop"><div class="hn"><div class="hname">'+esc(h.name)+'</div><div class="hsub">'+
+        (h.hidden?'Hidden':p?'Paused':TYPE_LABEL[h.type])+'</div></div>'+
+        '<div class="ebtns"><button class="p" data-a="h-eye" data-id="'+h.id+'" aria-label="'+(h.hidden?'Show habit':'Hide habit')+'">'+(h.hidden?I.eyeOff:I.eye)+'</button></div>'+
+        editBtns('h',h.id,i,act.length)+'</div></div>';
     }).join('')+'</div><button class="add" data-a="habit-new">'+I.plus+'New habit</button>';
   }
-  var list=S.habits.filter(function(h){return applies(h,ds)||logged(h,ds)});
+  var list=S.habits.filter(function(h){return !h.hidden&&(applies(h,ds)||logged(h,ds))});
   var done=0,miss=0;list.forEach(function(h){var st=status(h,val(ds,h));if(st==='done')done++;else if(st==='miss')miss++});
   var n=list.length,a=n?done/n*100:0,b=n?miss/n*100:0;
   var html=head;
@@ -794,16 +860,19 @@ function renderHabitsDay(){
       '<div class="pn">'+(done+miss)+' of '+n+' filled in</div></div>'+
       '<div class="list">'+list.map(function(h){return habitRow(h,ds)}).join('')+'</div>';
   }else html+='<div class="card empty"><b>Nothing scheduled</b>No habits apply to this day.</div>';
-  var off=act.filter(function(h){return list.indexOf(h)<0&&!activePause(h)&&ds>=h.created});
+  var off=act.filter(function(h){return !h.hidden&&list.indexOf(h)<0&&!activePause(h)&&ds>=h.created});
   if(off.length)html+='<div class="note">Not scheduled this day: '+off.map(function(h){return esc(h.name)}).join(', ')+'</div>';
-  var paused=act.filter(function(h){return activePause(h)});
+  var paused=act.filter(function(h){return !h.hidden&&activePause(h)});
   if(paused.length){
     html+='<div class="minihead">Paused</div><div class="card">'+paused.map(function(h){
       return '<div class="prow"><div class="hn"><div class="hname">'+esc(h.name)+'</div><div class="hsub">Paused since '+esc(niceDate(activePause(h).from))+'</div></div>'+
         '<button class="sbtn" data-a="h-resume" data-id="'+h.id+'">Resume</button></div>';
     }).join('')+'</div>';
   }
-  return html+'<button class="add" data-a="habit-new">'+I.plus+'New habit</button>';
+  var nh=act.filter(function(h){return h.hidden}).length;
+  html+='<button class="add" data-a="habit-new">'+I.plus+'New habit</button>';
+  if(nh)html+='<button class="hidnote" data-a="edit-toggle">'+I.eyeOff+nh+' hidden habit'+(nh===1?'':'s')+' · tap to manage</button>';
+  return html;
 }
 function daysText(days){
   if(days.length===7)return 'Every day';
@@ -822,16 +891,16 @@ function habitRow(h,ds){
     sub=ls.length?ls.join(', '):'None';sc=ls.length?'g':'r';
   }
   var on=ui.view==='h:'+h.id;
-  return '<div class="card hrow"><div class="htop">'+
-    '<div class="hn"><div class="hname">'+esc(h.name)+'</div><div class="hsub '+sc+'">'+sub+'</div></div>'+
+  return '<div class="card hrow"'+tintStyle(h)+'><div class="htop">'+
+    '<button class="hn" data-a="h-log" data-id="'+h.id+'"><div class="hname hl"><span class="tx">'+esc(h.name)+'</span>'+I.chevR+'</div><div class="hsub '+sc+'">'+sub+'</div></button>'+
     (h.archived?'':'<button class="fbtn'+(on?' on':'')+'" data-a="focus" data-v="h:'+h.id+'" aria-label="Show in calendar">'+I.cal+'</button>')+
     '</div><div class="hctl">'+controls(h,v)+'</div></div>';
 }
-function controls(h,v){
-  var id=' data-h="'+h.id+'"';
+function controls(h,v,ds){
+  var id=' data-h="'+h.id+'"'+(ds?' data-d="'+ds+'"':'');
   if(h.type==='check'){
-    return '<div class="seg2"><button class="yn'+(v===true?' on-g':'')+'" data-a="log-check"'+id+' data-v="1">'+I.check+'Done</button>'+
-      '<button class="yn'+(v===false?' on-r':'')+'" data-a="log-check"'+id+' data-v="0">'+I.x+'Missed</button></div>';
+    return '<div class="chips"><button class="chip'+(v===true?' on-g':'')+'" data-a="log-check"'+id+' data-v="1">Done</button>'+
+      '<button class="chip'+(v===false?' on-r':'')+'" data-a="log-check"'+id+' data-v="0">Missed</button></div>';
   }
   var g=hasGoal(h);
   if(h.type==='single'){
@@ -861,7 +930,7 @@ function renderWorkoutsDay(){
   var shown=S.workouts.filter(function(w){return !w.archived||raw.indexOf(w.id)>-1});
   var bar='<div class="wbar">'+(done.length
     ?done.map(function(w){return '<span class="wtag"><i style="background:'+w.c+'"></i>'+esc(w.name)+'</span>'}).join('')
-    :rest?'<span class="wtag"><i style="background:var(--gray)"></i>Rest day</span>':'Nothing filled in — tap what you did')+'</div>';
+    :rest?'<span class="wtag"><i style="background:'+restItem().c+'"></i>Rest day</span>':'Nothing filled in — tap what you did')+'</div>';
   var rows=shown.map(function(w){
     var on=raw.indexOf(w.id)>-1;
     return '<div class="wrow"><button class="wmain" data-a="w-toggle" data-id="'+w.id+'">'+
@@ -869,9 +938,10 @@ function renderWorkoutsDay(){
       '<span class="wname">'+esc(w.name)+'</span></button>'+
       (w.archived?'':'<button class="fbtn'+(ui.view==='w:'+w.id?' on':'')+'" data-a="focus" data-v="w:'+w.id+'" aria-label="Show in calendar">'+I.cal+'</button>')+'</div>';
   }).join('');
-  var restRow='<div class="wrow"><button class="wmain" data-a="w-rest"><span class="wchk'+(rest?' on':'')+'" style="'+(rest?'background:var(--gray)':'')+'">'+I.check+'</span>'+
-    '<span class="wname">Rest day<small>No workout, on purpose — counts as done</small></span></button></div>';
-  return head+bar+'<div class="card wlist">'+rows+'</div><div class="card wlist" style="margin-top:10px">'+restRow+'</div>'+
+  var rc=restItem().c;
+  var restRow='<div class="wrow"><button class="wmain" data-a="w-rest"><span class="wchk'+(rest?' on':'')+'" style="'+(rest?'background:'+rc:'border-color:'+rc)+'">'+I.check+'</span>'+
+    '<span class="wname">Rest day</span></button><button class="fbtn'+(ui.view==='w:'+REST?' on':'')+'" data-a="focus" data-v="w:'+REST+'" aria-label="Show in calendar">'+I.cal+'</button></div>';
+  return head+bar+'<div class="card wlist">'+rows+restRow+'</div>'+
     '<button class="add" data-a="w-new">'+I.plus+'New workout</button>';
 }
 
@@ -919,7 +989,7 @@ function renderProfilePage(){
   var ws=S.workouts.filter(function(w){return !w.archived||per[w.id]});
   if(ws.length){
     html+='<section class="card pcard"><div class="sum-h">Workouts in '+y+'</div>'+
-      bars(ws.map(function(w){return {l:'<span class="cd" style="background:'+w.c+'"></span>'+esc(w.name),n:per[w.id]||0,c:w.c}}).concat([{l:'<span class="cd" style="background:var(--gray)"></span>Rest days',n:rest,c:'var(--gray)'}]))+'</section>';
+      bars(ws.map(function(w){return {l:'<span class="cd" style="background:'+w.c+'"></span>'+esc(w.name),n:per[w.id]||0,c:w.c}}).concat([{l:'<span class="cd" style="background:'+restItem().c+'"></span>Rest day',n:rest,c:restItem().c}]))+'</section>';
   }
   return html;
 }
@@ -1094,15 +1164,15 @@ function readPhoto(file){
 var draft=null;
 function habitSheet(id){
   var h=id?H(id):null;
-  draft=h?clone(h):{id:null,name:'',type:'check',options:[],days:ALLDAYS.slice(),created:today()};
+  draft=h?clone(h):{id:null,name:'',type:'check',options:[],days:ALLDAYS.slice(),created:today(),bg:null};
   openSheet({title:h?'Edit habit':'New habit',left:'Cancel',right:h?'Save':'Add',rightA:'habit-save',body:'<div id="hb">'+habitBody()+'</div>'});
 }
 function habitBody(){
   var isNew=!draft.id,t=draft.type;
   var seg='<div class="seg'+(isNew?'':' dis')+'">'+['check','single','multi'].map(function(k){
-    return '<button class="'+(t===k?'on':'')+'" data-a="h-type" data-t="'+k+'"'+(isNew?'':' disabled')+'>'+{check:'Yes / No',single:'One answer',multi:'Multiple'}[k]+'</button>'}).join('')+'</div>';
-  var html='<div class="glabel">Habit</div><div class="group"><div class="grow"><input id="f-hname" class="full" data-f="h-name" placeholder="e.g. Wake up at 8:00" value="'+esc(draft.name)+'" maxlength="40"></div></div>'+
-    '<div class="glabel">Type</div>'+seg;
+    return '<button class="'+(t===k?'on':'')+'" data-a="h-type" data-t="'+k+'"'+(isNew?'':' disabled')+'>'+TYPE_LABEL[k]+'</button>'}).join('')+'</div>';
+  var html='<div class="glabel">Habit name</div><div class="group"><div class="grow"><input id="f-hname" class="full" data-f="h-name" placeholder="e.g. Wake up at 8:00" value="'+esc(draft.name)+'" maxlength="40"></div></div>'+
+    '<div class="glabel">Answer type</div>'+seg;
   if(t!=='check'){
     html+='<div class="glabel">Answers</div><div class="group">'+draft.options.map(function(o,i){
       return '<div class="grow opt-row">'+
@@ -1115,9 +1185,14 @@ function habitBody(){
   }
   html+='<div class="glabel">Repeat on</div><div class="group"><div class="days">'+DAYL.map(function(l,i){
     return '<button class="'+(draft.days.indexOf(i)>-1?'on':'')+'" data-a="h-day" data-i="'+i+'">'+l+'</button>'}).join('')+'</div></div>';
+  html+='<div class="glabel">Card color</div><div class="group"><div class="colors">'+
+    '<button class="nb'+(!draft.bg?' on':'')+'" data-a="h-bg" data-c="" aria-label="Neutral"></button>'+
+    COLORS.map(function(c){return '<button class="'+(draft.bg===c?'on':'')+'" style="background:'+c+'" data-a="h-bg" data-c="'+c+'" aria-label="Color"></button>'}).join('')+'</div></div>';
   if(draft.id){
-    var p=activePause(H(draft.id));
+    var p=activePause(H(draft.id)),hidden=H(draft.id).hidden;
     html+='<div class="glabel">&nbsp;</div><div class="group">'+
+      '<button class="gbtn grow" data-a="h-log" data-id="'+draft.id+'">'+I.list+'Habit log</button>'+
+      '<button class="gbtn grow" data-a="h-eye" data-id="'+draft.id+'">'+(hidden?I.eye+'Show habit':I.eyeOff+'Hide habit')+'</button>'+
       (p?'<button class="gbtn grow" data-a="h-resume" data-id="'+draft.id+'">'+I.play+'Resume habit</button>'
         :'<button class="gbtn grow" data-a="h-pause">'+I.pause+'Pause habit</button>')+
       '<button class="gbtn grow" data-a="h-archive">'+I.box+'Archive habit</button></div>'+
@@ -1158,7 +1233,10 @@ function colorsBody(){
   }
   var ws=activeWorkouts();
   var html='<div class="ghint" style="margin:4px 16px 0">Tap an item to change its color everywhere in the app.</div>';
-  html+='<div class="glabel">Workouts</div><div class="group">'+(ws.length?ws.map(function(w){return item('w:'+w.id,w.c,esc(w.name))}).join(''):'<div class="grow"><span class="rv" style="text-align:left">No workouts yet</span></div>')+'</div>';
+  html+='<div class="glabel">Workouts</div><div class="group">'+(ws.map(function(w){return item('w:'+w.id,w.c,esc(w.name))}).join('')+item('w:'+REST,restItem().c,'Rest day'))+'</div>';
+  var hsAll=activeHabits();
+  if(hsAll.length)html+='<div class="glabel">Habits</div><div class="group">'+hsAll.map(function(h){return item('h:'+h.id,h.c,esc(h.name))}).join('')+'</div>'+
+    '<div class="ghint">Habit colors are used when you view several things together in the calendar.</div>';
   activeHabits().filter(function(h){return h.type==='multi'&&h.options.length}).forEach(function(h){
     html+='<div class="glabel">'+esc(h.name)+'</div><div class="group">'+h.options.map(function(o){return item('o:'+h.id+':'+o.id,o.c,esc(o.label))}).join('')+'</div>';
   });
@@ -1180,15 +1258,105 @@ function archivedBody(){
   return html+'<div class="ghint">Restoring brings it back from today. Its history stays as it was.</div>';
 }
 
-/* focus picker */
-function focusSheet(){
-  function r(v,label,lead){return '<button class="gbtn plain grow" data-a="focus-set" data-v="'+v+'">'+lead+'<span class="gl">'+label+'</span>'+(ui.view===v?'<span class="chk">'+I.check+'</span>':'')+'</button>'}
-  var hs=activeHabits(),ws=activeWorkouts();
-  var body='<div class="group">'+r('all','Overview',I.grid)+'</div>';
-  if(hs.length)body+='<div class="glabel">Habits</div><div class="group">'+hs.map(function(h){return r('h:'+h.id,esc(h.name),'')}).join('')+'</div>';
-  body+='<div class="glabel">Workouts</div><div class="group">'+r('wall','All workouts',I.dumbbell)+
-    ws.map(function(w){return r('w:'+w.id,esc(w.name),'<span class="pdot" style="background:'+w.c+'"></span>')}).join('')+'</div>';
-  openSheet({title:'Show in calendar',left:'Close',body:body});
+/* focus picker: one mode (Overview / All workouts) or one or more items */
+var pickSel=[];
+function curSel(){var v=ui.view;if(v.indexOf('m:')===0)return v.slice(2).split(',');if(v.indexOf('h:')===0||v.indexOf('w:')===0)return [v];return []}
+function focusSheet(){pickSel=curSel();openSheet({title:'Show in calendar',left:'Cancel',right:'Show',rightA:'focus-apply',body:'<div id="fsb">'+focusBody()+'</div>'})}
+function focusBody(){
+  function mode(v,label,lead){return '<button class="gbtn plain grow" data-a="focus-set" data-v="'+v+'">'+lead+'<span class="gl">'+label+'</span>'+(ui.view===v&&!pickSel.length?'<span class="chk">'+I.check+'</span>':'')+'</button>'}
+  function item(k,label,c){var on=pickSel.indexOf(k)>-1;return '<button class="gbtn plain grow" data-a="focus-tog" data-k="'+k+'"><span class="pdot" style="background:'+c+'"></span><span class="gl">'+label+'</span><span class="pick'+(on?' on':'')+'">'+I.check+'</span></button>'}
+  var hs=shownHabits(),ws=activeWorkouts();
+  var body='<div class="group">'+mode('all','Overview',I.grid)+mode('wall','All workouts',I.dumbbell)+'</div>'+
+    '<div class="ghint">Or tick one or more below to see them together, then tap Show.</div>';
+  if(hs.length)body+='<div class="glabel">Habits</div><div class="group">'+hs.map(function(h){return item('h:'+h.id,esc(h.name),h.c)}).join('')+'</div>';
+  body+='<div class="glabel">Workouts</div><div class="group">'+ws.map(function(w){return item('w:'+w.id,esc(w.name),w.c)}).join('')+item('w:'+REST,'Rest day',restItem().c)+'</div>';
+  return body;
+}
+function viewItem(key){
+  var i=key.indexOf(':'),k=key.slice(0,i),id=key.slice(i+1);
+  if(k==='h'){var h=H(id);if(!h||h.archived)return null;
+    return {key:key,name:h.name,c:h.c,on:function(ds){return status(h,val(ds,h))==='done'},rel:function(ds){return applies(h,ds)||logged(h,ds)}}}
+  if(k==='w'){var w=id===REST?restItem():W(id);if(!w||w.archived)return null;
+    return {key:key,name:w.name,c:w.c,on:function(ds){return wraw(ds).indexOf(w.id)>-1},rel:function(){return false}}}
+  return null;
+}
+
+/* ---------- habit log ---------- */
+var logH=null,logOpen=null,logLimit=30;
+function freeColor(list){var used=list.map(function(x){return x.c});return COLORS.filter(function(c){return used.indexOf(c)<0})[0]||COLORS[list.length%COLORS.length]}
+function habitChanges(a,b){
+  var out=[];
+  if(a.name!==b.name)out.push('Renamed from “'+a.name+'”');
+  var la=a.options.map(function(o){return o.label}).join('|'),lb=b.options.map(function(o){return o.label}).join('|');
+  if(la!==lb)out.push('Answers changed');
+  var ga=a.options.filter(function(o){return o.goal}).map(function(o){return o.label}).join(', '),gb=b.options.filter(function(o){return o.goal}).map(function(o){return o.label}).join(', ');
+  if(b.type==='single'&&ga!==gb)out.push(gb?'Goal set to '+gb:'Goal removed');
+  if(a.days.slice().sort().join()!==b.days.slice().sort().join())out.push('Repeat days: '+daysText(b.days));
+  return out;
+}
+function daysBetween(a,b){return Math.round((parseD(b)-parseD(a))/864e5)}
+function answerText(h,v){
+  var st=status(h,v);if(!st)return {t:'–',c:''};
+  if(h.type==='check')return {t:st==='done'?'Done':'Missed',c:st==='done'?'g':'r'};
+  if(h.type==='single'){var o=optOf(h,v);return {t:o.label,c:st==='done'?'g':'o'}}
+  var ls=v.map(function(id){var o=optOf(h,id);return o?o.label:null}).filter(Boolean);
+  return {t:ls.length?ls.join(', '):'None',c:ls.length?'g':'r'};
+}
+function habitStats(h){
+  var t=today(),s={done:0,miss:0,none:0,cnt:{},best:0},run=0;
+  var first=h.created;
+  Object.keys(S.log).forEach(function(ds){if(ds<first&&S.log[ds][h.id]!==undefined)first=ds});
+  for(var ds=first,i=0;ds<=t&&i<6000;ds=addDays(ds,1),i++){
+    var v=val(ds,h),st=status(h,v);
+    if(st==='done'){s.done++;run++;if(run>s.best)s.best=run}
+    else if(st==='miss'){s.miss++;run=0}
+    else if(applies(h,ds)){if(ds<t){s.none++;run=0}}
+    if(h.type==='single'&&st)s.cnt[v]=(s.cnt[v]||0)+1;
+    if(h.type==='multi'&&Array.isArray(v))v.forEach(function(x){if(optOf(h,x))s.cnt[x]=(s.cnt[x]||0)+1});
+  }
+  var tot=s.done+s.miss+s.none;s.rate=tot?Math.round(s.done/tot*100)+'%':'–';
+  var top=null;Object.keys(s.cnt).forEach(function(k){if(!top||s.cnt[k]>s.cnt[top])top=k});
+  s.top=top?optOf(h,top).label+' ('+s.cnt[top]+'×)':null;
+  return s;
+}
+function logSheet(id){logH=id;logOpen=null;logLimit=30;openSheet({title:'Habit log',left:'Done',body:'<div id="lb">'+logBody()+'</div>'})}
+function refreshLog(){var b=$('#lb');if(b&&logH)b.innerHTML=logBody()}
+function afterLog(){render();refreshLog()}
+function logBody(){
+  var h=H(logH);if(!h)return '<div class="empty"><b>Habit not found</b></div>';
+  var t=today(),s=habitStats(h),run=daysBetween(h.created,t)+1,p=activePause(h);
+  var missLabel=h.type==='single'&&hasGoal(h)?'Other answer':h.type==='multi'?'None':'Missed';
+  var html='<div class="lhead"><div class="lname">'+esc(h.name)+'</div><div class="lsub">'+TYPE_LABEL[h.type]+' · '+daysText(h.days)+(p?' · Paused':'')+(h.hidden?' · Hidden':'')+(h.archived?' · Archived':'')+'</div></div>';
+  html+='<div class="ltiles">'+tile(run<1?'–':run,run===1?'Day running':'Days running')+tile(s.rate,'Success rate','g')+tile(streak(h),'Current streak')+
+    tile(s.done,h.type==='single'&&hasGoal(h)?'On goal':'Done','g')+tile(s.miss,missLabel,h.type==='single'?'o':'r')+tile(s.none,'Not filled in')+'</div>';
+  html+='<div class="glabel">Details</div><div class="group">'+
+    '<div class="grow"><label>Started</label><input type="date" data-f="l-start" value="'+h.created+'" max="'+t+'"></div>'+
+    '<div class="grow"><label>Best streak</label><span class="rv">'+s.best+(s.best===1?' day':' days')+'</span></div>'+
+    (s.top?'<div class="grow"><label>Most picked</label><span class="rv">'+esc(s.top)+'</span></div>':'')+
+    '</div><div class="ghint">Change the start date to fill in days from before you created this habit.</div>';
+  html+='<div class="glabel">Note</div><div class="group"><div class="grow"><textarea data-f="l-note" rows="2" maxlength="300" placeholder="Why you started, or what your goal is">'+esc(h.note)+'</textarea></div></div>';
+  /* filled-in days */
+  var days=Object.keys(S.log).filter(function(ds){return S.log[ds][h.id]!==undefined}).sort().reverse();
+  var shown=days.slice(0,logLimit);
+  if(logOpen&&shown.indexOf(logOpen)<0)shown.unshift(logOpen);
+  html+='<div class="glabel">Filled-in days</div><div class="group">'+
+    '<div class="grow"><label>Fill in a day</label><input type="date" data-f="l-day" value="" max="'+t+'"></div>'+
+    shown.map(function(ds){
+      var a=answerText(h,val(ds,h)),d=parseD(ds),open=logOpen===ds;
+      return '<button class="grow lg-row" data-a="l-open" data-d="'+ds+'"><span class="lg-d">'+esc(d.toLocaleDateString('en-GB',{weekday:'short'})+' '+niceDate(ds))+'</span>'+
+        '<span class="lg-v '+a.c+'">'+esc(a.t)+'</span><span class="rchev">'+(open?I.chevD:I.chevR)+'</span></button>'+
+        (open?'<div class="lg-edit">'+controls(h,val(ds,h),ds)+'<button class="sbtn red" data-a="l-clear" data-d="'+ds+'">Clear this day</button></div>':'');
+    }).join('')+
+    (days.length>logLimit?'<button class="more grow" data-a="l-more">Show more</button>':'')+'</div>'+
+    (days.length?'':'<div class="ghint">Nothing filled in yet.</div>');
+  /* history */
+  var hist=h.hist.map(function(e,i){return {d:e.d,t:e.t,i:i}}).sort(function(a,b){return a.d<b.d?1:a.d>b.d?-1:b.i-a.i});
+  var hasCreated=h.hist.some(function(e){return e.t==='Created'});
+  html+='<div class="glabel">History</div><div class="group">'+
+    hist.map(function(e){return '<div class="grow lg-row"><span class="lg-d">'+esc(niceDate(e.d))+'</span><span class="lg-v" style="font-weight:500">'+esc(e.t)+'</span>'+
+      '<button class="hx" data-a="l-hdel" data-i="'+e.i+'" aria-label="Remove">'+I.x+'</button></div>'}).join('')+
+    (hasCreated?'':'<div class="grow lg-row"><span class="lg-d">'+esc(niceDate(h.created))+'</span><span class="lg-v" style="font-weight:500">Started</span></div>')+'</div>';
+  return html;
 }
 
 /* ---------- cloud sync (Supabase) ---------- */
@@ -1272,11 +1440,12 @@ function moveIn(list,id,dir){
   sortItems(S);touch();render();
 }
 function nextO(list){return list.reduce(function(m,x){return Math.max(m,x.o)},-1)+1}
-function pauseHabit(h){if(!activePause(h)){h.pauses.push({from:today(),to:null});h.u=Date.now()}}
+function pauseHabit(h){if(!activePause(h)){h.pauses.push({from:today(),to:null});h.hist.push({d:today(),t:'Paused'});h.u=Date.now()}}
 function resumeHabit(h){
   var p=activePause(h);if(!p)return;
   p.to=addDays(today(),-1);
   if(p.to<p.from)h.pauses.splice(h.pauses.indexOf(p),1);
+  h.hist.push({d:today(),t:'Resumed'});
   h.u=Date.now();
 }
 function scrollToCal(){var c=$('.cal');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:'smooth',block:'start'})}
@@ -1303,15 +1472,33 @@ var A={
   'focus-clear':function(){ui.view='all';render()},
   'focus-pick':function(){focusSheet()},
   'focus-set':function(d){ui.view=d.v;closeSheet();render()},
-  'log-check':function(d){var h=H(d.h),v=d.v==='1';setLog(ui.sel,h,val(ui.sel,h)===v?undefined:v);render()},
-  'log-single':function(d){var h=H(d.h);setLog(ui.sel,h,val(ui.sel,h)===d.o?undefined:d.o);render()},
+  'log-check':function(d){var ds=d.d||ui.sel,h=H(d.h),v=d.v==='1';setLog(ds,h,val(ds,h)===v?undefined:v);afterLog()},
+  'log-single':function(d){var ds=d.d||ui.sel,h=H(d.h);setLog(ds,h,val(ds,h)===d.o?undefined:d.o);afterLog()},
   'log-multi':function(d){
-    var h=H(d.h),cur=val(ui.sel,h),arr=Array.isArray(cur)?cur.filter(function(id){return optOf(h,id)}):[];
+    var ds=d.d||ui.sel,h=H(d.h),cur=val(ds,h),arr=Array.isArray(cur)?cur.filter(function(id){return optOf(h,id)}):[];
     var i=arr.indexOf(d.o);if(i>-1)arr.splice(i,1);else arr.push(d.o);
     arr.sort(function(a,b){return h.options.indexOf(optOf(h,a))-h.options.indexOf(optOf(h,b))});
-    setLog(ui.sel,h,arr.length?arr:undefined);render();
+    setLog(ds,h,arr.length?arr:undefined);afterLog();
   },
-  'log-none':function(d){var h=H(d.h),cur=val(ui.sel,h);setLog(ui.sel,h,(Array.isArray(cur)&&cur.length===0)?undefined:[]);render()},
+  'log-none':function(d){var ds=d.d||ui.sel,h=H(d.h),cur=val(ds,h);setLog(ds,h,(Array.isArray(cur)&&cur.length===0)?undefined:[]);afterLog()},
+  'h-log':function(d){logSheet(d.id)},
+  'h-eye':function(d){
+    var h=H(d.id);h.hidden=!h.hidden;h.hist.push({d:today(),t:h.hidden?'Hidden':'Shown again'});h.u=Date.now();
+    if(h.hidden&&ui.view==='h:'+h.id)ui.view='all';
+    touch();if($('#hb'))closeSheet();render();toast(h.hidden?'Habit hidden — Edit to show it again':'Habit visible again');
+  },
+  'h-bg':function(d,el){draft.bg=d.c||null;$$('button',el.parentNode).forEach(function(b){b.classList.toggle('on',b===el)})},
+  'l-open':function(d){logOpen=logOpen===d.d?null:d.d;refreshLog()},
+  'l-clear':function(d){var h=H(logH);setLog(d.d,h,undefined);logOpen=null;afterLog()},
+  'l-more':function(){logLimit+=30;refreshLog()},
+  'l-hdel':function(d){var h=H(logH);h.hist.splice(+d.i,1);h.u=Date.now();touch();refreshLog()},
+  'focus-tog':function(d){var i=pickSel.indexOf(d.k);if(i>-1)pickSel.splice(i,1);else pickSel.push(d.k);$('#fsb').innerHTML=focusBody()},
+  'focus-apply':function(){
+    if(pickSel.length===1)ui.view=pickSel[0];
+    else if(pickSel.length>1)ui.view='m:'+pickSel.join(',');
+    else if(ui.view.indexOf('h:')===0||ui.view.indexOf('w:')===0||ui.view.indexOf('m:')===0)ui.view='all';
+    closeSheet();render();
+  },
   'w-toggle':function(d){
     var arr=wraw(ui.sel).filter(function(id){return id!==REST&&W(id)});
     var i=arr.indexOf(d.id);if(i>-1)arr.splice(i,1);else arr.push(d.id);
@@ -1346,7 +1533,10 @@ var A={
     if(draft.type!=='check'&&!opts.length){toast('Add at least one answer');return}
     var old=draft.id?H(draft.id):null;
     var h={id:draft.id||uid(),name:name,type:draft.type,options:opts,created:draft.created||today(),days:draft.days.slice(),
-      pauses:old?old.pauses:[],archived:old?old.archived:null,o:old?old.o:nextO(S.habits),u:Date.now()};
+      pauses:old?old.pauses:[],archived:old?old.archived:null,o:old?old.o:nextO(S.habits),u:Date.now(),
+      c:old?old.c:freeColor(S.habits),note:old?old.note:'',hist:old?old.hist.slice():[{d:today(),t:'Created'}],
+      hidden:old?old.hidden:false,bg:draft.bg||null};
+    if(old)habitChanges(old,h).forEach(function(t){h.hist.push({d:today(),t:t})});
     if(old)S.habits[S.habits.indexOf(old)]=h;else S.habits.push(h);
     touch();closeSheet();render();toast(old?'Habit saved':'Habit added');
   },
@@ -1355,14 +1545,14 @@ var A={
   'h-archive':function(){
     var h=H(draft.id),p=activePause(h);
     if(p){p.to=addDays(today(),-1);if(p.to<p.from)h.pauses.splice(h.pauses.indexOf(p),1)}
-    h.archived=today();h.u=Date.now();
+    h.archived=today();h.hist.push({d:today(),t:'Archived'});h.u=Date.now();
     if(ui.view==='h:'+h.id)ui.view='all';
     touch();closeSheet();render();toast('Archived — find it in Settings');
   },
   'h-restore':function(d){
     var h=H(d.id),y=addDays(today(),-1);
     if(h.archived&&h.archived<=y)h.pauses.push({from:h.archived,to:y});
-    h.archived=null;h.o=nextO(S.habits);h.u=Date.now();sortItems(S);touch();
+    h.archived=null;h.hist.push({d:today(),t:'Restored'});h.o=nextO(S.habits);h.u=Date.now();sortItems(S);touch();
     $('#ab').innerHTML=archivedBody();render();toast('Habit restored');
   },
   'habit-del':function(){delHabit(draft.id,true)},
@@ -1391,7 +1581,9 @@ var A={
   'c-open':function(d){colorOpen=colorOpen===d.k?null:d.k;$('#cb').innerHTML=colorsBody()},
   'c-set':function(d){
     var p=d.k.split(':');
-    if(p[0]==='w'){var w=W(p[1]);w.c=d.c;w.u=Date.now()}
+    if(p[0]==='w'&&p[1]===REST){S.restC=d.c;S.restU=Date.now()}
+    else if(p[0]==='w'){var w=W(p[1]);w.c=d.c;w.u=Date.now()}
+    else if(p[0]==='h'){var hh=H(p[1]);hh.c=d.c;hh.u=Date.now()}
     else{var h=H(p[1]),o=optOf(h,p[2]);o.c=d.c;h.u=Date.now()}
     touch();$('#cb').innerHTML=colorsBody();render();
   },
@@ -1428,7 +1620,7 @@ var A={
   'reset':function(){
     dialog({title:'Erase data on this phone?',msg:'Your profile, habits, workouts and history will be deleted from this phone and cloud sync is signed out. Your cloud copy is not deleted.',ok:'Erase',destructive:true}).then(function(ok){
       if(!ok)return;
-      S={v:3,pristine:false,profile:emptyProfile(),habits:[],workouts:[],log:{},lt:{},wlog:{},wt:{},del:{}};
+      S={v:3,pristine:false,profile:emptyProfile(),habits:[],workouts:[],log:{},lt:{},wlog:{},wt:{},del:{},restC:'#8e8e93',restU:0};
       SY.rt='';SY.at='';SY.uid='';SY.last=0;SY.err='';saveSync();
       ui.view='all';ui.edit=false;save();closeSheet();render();toast('Data erased');
     });
@@ -1488,6 +1680,14 @@ function onField(e){
 document.addEventListener('input',onField);
 document.addEventListener('change',function(e){
   onField(e);
+  var lf=e.target.getAttribute&&e.target.getAttribute('data-f');
+  if(lf&&lf.indexOf('l-')===0&&logH){
+    var lh=H(logH),lv=e.target.value;
+    if(lf==='l-start'&&lv&&lv<=today()&&lv!==lh.created){lh.created=lv;lh.hist.push({d:today(),t:'Start date set to '+niceDate(lv)});lh.u=Date.now();touch();afterLog()}
+    else if(lf==='l-start'){e.target.value=lh.created}
+    if(lf==='l-day'&&lv&&lv<=today()){logOpen=lv;refreshLog()}
+    if(lf==='l-note'){lh.note=lv.slice(0,300);lh.u=Date.now();touch()}
+  }
   if(e.target.id==='photo-in'&&e.target.files&&e.target.files[0]){
     readPhoto(e.target.files[0]).then(function(url){pdraft.photo=url;refreshPhoto()}).catch(function(){toast('Couldn’t read that photo')});
   }
