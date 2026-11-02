@@ -291,8 +291,8 @@ button.hn{display:block;text-align:left}
 .mm-g i.e{visibility:hidden}
 .mm-g i.d{background:var(--green)}
 .mm-g i.n{background:var(--orange);opacity:.75}
-.mm-g i.hp{background:color-mix(in srgb,var(--green) 45%,transparent)}
-.mm-g i.hz{background:var(--red-t)}
+.mm-g i.hp{background:var(--orange)}
+.mm-g i.hz{background:var(--red)}
 .mm-g i.f{background:transparent;box-shadow:inset 0 0 0 1px var(--fill)}
 .mm-g i.t{box-shadow:0 0 0 1.5px var(--accent)}
 
@@ -370,7 +370,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 .mhead{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 10px}
 .mhead b{font-size:13px;font-weight:600;color:var(--label2);text-transform:uppercase;letter-spacing:.02em}
 .mhead span{font-size:13px;color:var(--label3);font-weight:500}
-.mslots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mslots{display:grid;grid-template-columns:1fr;gap:8px}
 .mslot{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:var(--fill2);min-width:0;text-align:left}
 .mface{width:42px;height:42px;border-radius:50%;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
 .mface svg{width:21px;height:21px;color:var(--label2)}
@@ -459,7 +459,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 <script>
 (function(){
 'use strict';
-var VERSION='2.3';
+var VERSION='2.4';
 var KEY='hh_data_v1', UIKEY='hh_ui_v1', SKEY='hh_sync_v1';
 var DEFAULT_URL='https://arqdaubaruecjwzgcuhe.supabase.co';
 var TABLE='habithub_data';
@@ -582,6 +582,12 @@ function norm(d){
   if(!isObj(d.dt))d.dt={};
   Object.keys(d.dt).forEach(function(k){if(k.indexOf('|')<0){var t0=d.dt[k];delete d.dt[k];['m','e','n'].forEach(function(p){if(d.day[k]&&d.day[k][p]!=null)d.dt[k+'|'+p]=t0})}});
   Object.keys(d.day).forEach(function(k){['m','e','n'].forEach(function(p){if(d.day[k][p]!=null&&!d.dt[k+'|'+p])d.dt[k+'|'+p]=1})});
+  Object.keys(d.day).forEach(function(k){
+    var x=d.day[k];if(!x.e)return;
+    var m=x.m||{},e=x.e,mf=m.f||[],f=mf.concat((e.f||[]).filter(function(i){return mf.indexOf(i)<0}));
+    var v=e.v||m.v;x.m={f:f};if(v)x.m.v=v;if(!v&&!f.length)delete x.m;delete x.e;
+    d.dt[k+'|m']=Math.max(d.dt[k+'|m']||0,d.dt[k+'|e']||0);delete d.dt[k+'|e'];
+  });
   if(!Array.isArray(d.feel))d.feel=defaultFeel();
   if(typeof d.feelU!=='number')d.feelU=0;
   if(!d.restC)d.restC='#8e8e93';
@@ -843,7 +849,7 @@ function renderMoodCard(){
       '<span class="mtx"><span class="mlab">'+label+'</span><span class="msub">'+esc(sub)+'</span></span></button>';
   }
   return '<section class="card mood"><div class="mhead"><b>How are you?</b><span>'+esc(dayLabel(ds))+'</span></div>'+
-    '<div class="mslots">'+slot('m',I.sun,'Morning','How did you sleep?')+slot('e',I.moon,'Evening','How was your day?')+'</div>'+
+    '<div class="mslots">'+slot('m',I.smile,'Mood','Tap to fill in how you feel today')+'</div>'+
     '<button class="mnote" data-a="note-open">'+I.note+(d.n?'<span class="tx">'+esc(d.n)+'</span>':'<span class="tx ph">Add a note for this day</span>')+'</button></section>';
 }
 function calDates(){
@@ -1211,7 +1217,7 @@ function yMonth(y,m,mode,big){
 function yLegend(mode){
   if(mode==='workouts'){var ws=activeWorkouts();return '<div class="legend" style="padding-top:14px">'+ws.map(function(w){return li(w.c,esc(w.name))}).join('')+li(restItem().c,'Rest day')+'</div>'}
   if(mode==='mood')return '<div class="legend" style="padding-top:14px">'+MOODS.slice(1).reverse().map(function(m){return li(m.c,m.l)}).join('')+'</div>';
-  if(mode==='habits')return '<div class="legend" style="padding-top:14px">'+li('var(--green)','All done')+li('color-mix(in srgb,var(--green) 45%,transparent)','Some done')+li('var(--red-t)','None done')+'</div>';
+  if(mode==='habits')return '<div class="legend" style="padding-top:14px">'+li('var(--green)','All done')+li('var(--orange)','Some done')+li('var(--red)','None done')+'</div>';
   return '<div class="legend" style="padding-top:14px">'+li('var(--green)','Done')+li('var(--orange)','Incomplete')+'</div>';
 }
 function renderProfilePage(){
@@ -1533,10 +1539,10 @@ function archivedBody(){
 
 /* mood check-in wheel */
 var moodK='m',moodDs=null;
-function moodSheet(k){moodK=k;moodDs=ui.sel;openSheet({title:k==='m'?'Morning':'Evening',left:'Done',body:'<div id="mb">'+moodBody(true)+'</div>'})}
+function moodSheet(k){moodK=k;moodDs=ui.sel;openSheet({title:'Mood',left:'Close',body:'<div id="mb">'+moodBody(true)+'</div>'})}
 function moodBody(anim){
   var x=DAY(moodDs)[moodK]||{},sel=x.v,f=x.f||[],R=104;
-  var html='<div class="mq">'+(moodK==='m'?'How did you sleep?':'How was your day?')+' · '+esc(dayLabel(moodDs))+'</div>';
+  var html='<div class="mq">'+'How are you feeling today?'+' · '+esc(dayLabel(moodDs))+'</div>';
   html+='<div class="wheelm'+(anim?' anim':'')+'"><div class="wcenter">'+(sel?'<span class="wbig">'+MOODS[sel].e+'</span><span class="wl">'+MOODS[sel].l+'</span>':'<span class="wl">Tap a face</span>')+'</div>'+
     MOODS.slice(1).reverse().map(function(m,i){
       var a=(-90+i*72)*Math.PI/180,px=Math.round(Math.cos(a)*R),py=Math.round(Math.sin(a)*R);
@@ -1544,7 +1550,7 @@ function moodBody(anim){
     }).join('')+'</div>';
   html+='<div class="glabel">How you feel</div><div class="chips fchips">'+
     (S.feel.length?S.feel.map(function(fe){var on=f.indexOf(fe.id)>-1;return '<button class="chip'+(on?' on-a':'')+'" data-a="mood-feel" data-id="'+fe.id+'">'+esc(fe.label)+'</button>'}).join(''):'<span class="ngoal">Add feelings in Settings → Mood feelings</span>')+'</div>';
-  if(sel||f.length)html+='<div class="glabel">&nbsp;</div><div class="group"><button class="gbtn red" data-a="mood-clear">'+I.trash+'Clear '+(moodK==='m'?'morning':'evening')+'</button></div>';
+  if(sel||f.length)html+='<div class="glabel">&nbsp;</div><div class="group"><button class="gbtn red" data-a="mood-clear">'+I.trash+'Clear mood</button></div>';
   return html;
 }
 var noteDs=null;
