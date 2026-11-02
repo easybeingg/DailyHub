@@ -297,6 +297,32 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 .gbtn .gl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--fill);border-radius:9px;padding:2px;gap:2px}
 .seg.two,.seg.four{grid-template-columns:1fr 1fr}
+/* habit lines (one row per habit) */
+.hlist{overflow:hidden}
+.hline{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:10px 12px 10px 16px;position:relative;text-align:left}
+.hline+.hline::before{content:"";position:absolute;top:0;left:54px;right:0;border-top:.5px solid var(--sep)}
+.hline .hname{flex:1;min-width:0;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hans{flex:none;max-width:46%;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--label3)}
+.hans.g{color:var(--green)} .hans.o{color:var(--orange)} .hans.r{color:var(--red)} .hans.n{color:var(--label2)}
+.hline>svg{width:14px;height:14px;color:var(--label3);flex:none;stroke-width:2.6}
+.sdot{width:26px;height:26px;border-radius:50%;border:2px solid var(--label3);display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.sdot svg{width:15px;height:15px;stroke-width:3}
+.sdot.g{background:var(--green);border-color:var(--green)}
+.sdot.o{background:var(--orange);border-color:var(--orange)}
+.sdot.r{background:var(--red);border-color:var(--red)}
+.sdot.n{background:var(--gray);border-color:var(--gray)}
+/* answer pop-up */
+.atiles{display:grid;gap:10px;margin-top:16px}
+.at{min-height:54px;padding:8px 10px;border-radius:14px;background:var(--row);font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-variant-numeric:tabular-nums}
+.at .dot{width:9px;height:9px;border-radius:50%;flex:none}
+.at .star{font-size:12px;color:var(--orange)}
+.at.on-g{background:var(--green);color:#fff}
+.at.on-o{background:var(--orange);color:#fff}
+.at.on-r{background:var(--red);color:#fff}
+.at.on-n{background:var(--gray);color:#fff}
+.at.on-c{color:#fff}
+.at.on-c .dot{background:#fff!important;opacity:.85}
+.at.on-g .star,.at.on-o .star{color:#fff}
 /* mood card */
 .mood{padding:12px 12px 2px;margin-bottom:12px}
 .mhead{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 10px}
@@ -345,6 +371,13 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 .cwrap{position:relative}
 .cwrap+.cwrap::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:.5px solid var(--sep)}
 .cwrap .colors{padding-top:4px}
+.crow2{display:flex;align-items:center;padding-right:12px}
+.crow2 .crow{flex:1;min-width:0;padding-right:8px}
+.mvb{display:flex;gap:6px;flex:none}
+.mvb button{width:30px;height:30px;border-radius:50%;background:var(--fill);color:var(--label2);display:flex;align-items:center;justify-content:center}
+.mvb button:disabled{opacity:.3}
+.mvb svg{width:15px;height:15px}
+.goal{min-width:80px;justify-content:center}
 .ph-edit{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0 4px}
 .ph-btns{display:flex;gap:18px}
 .ph-btns label,.ph-btns button{color:var(--accent);font-size:16px;font-weight:500;cursor:pointer}
@@ -384,7 +417,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 <script>
 (function(){
 'use strict';
-var VERSION='1.7';
+var VERSION='1.9';
 var KEY='hh_data_v1', UIKEY='hh_ui_v1', SKEY='hh_sync_v1';
 var DEFAULT_URL='https://arqdaubaruecjwzgcuhe.supabase.co';
 var TABLE='habithub_data';
@@ -447,6 +480,7 @@ var I={
   moon:svg('<path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/>'),
   smile:svg('<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c.9 1.2 2.1 1.8 3.5 1.8s2.6-.6 3.5-1.8"/><circle cx="9" cy="10" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.1" fill="currentColor" stroke="none"/>'),
   note:svg('<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8.5 12.5h7M8.5 16h5"/>'),
+  minusLine:svg('<path d="M7 12h10"/>'),
   list:svg('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>')
 };
 
@@ -968,7 +1002,7 @@ function renderHabitsDay(){
   if(n){
     html+='<div class="prog"><div class="pt"><b style="width:'+a+'%;background:var(--green)"></b><b style="width:'+b+'%;background:var(--red)"></b><b style="width:'+cn+'%;background:var(--gray)"></b></div>'+
       '<div class="pn">'+(done+miss+na)+' of '+n+' filled in</div></div>'+
-      '<div class="list">'+list.map(function(h){return habitRow(h,ds)}).join('')+'</div>';
+      '<div class="card hlist">'+list.map(function(h){return habitLine(h,ds)}).join('')+'</div>';
   }else html+='<div class="card empty"><b>Nothing scheduled</b>No habits apply to this day.</div>';
   var off=act.filter(function(h){return !h.hidden&&list.indexOf(h)<0&&!activePause(h)&&ds>=h.created});
   if(off.length)html+='<div class="note">Not scheduled this day: '+off.map(function(h){return esc(h.name)}).join(', ')+'</div>';
@@ -990,6 +1024,15 @@ function daysText(days){
   if(s==='01234')return 'Weekdays';
   if(s==='56')return 'Weekends';
   return days.slice().sort().map(function(i){return ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]}).join(', ');
+}
+function habitLine(h,ds){
+  var v=val(ds,h),st=status(h,v),a=answerText(h,v),cls='',ic='';
+  if(st==='done'){cls='g';ic=I.check}
+  else if(st==='miss'){cls=(h.type==='single'||h.type==='number')?'o':'r';ic=(h.type==='single'||h.type==='number')?I.check:I.x}
+  else if(st==='na'){cls='n';ic=I.minusLine}
+  var bg=h.bg?' style="background:color-mix(in srgb,'+h.bg+' var(--tintp),var(--card))"':'';
+  return '<button class="hline"'+bg+' data-a="ans-open" data-id="'+h.id+'"><span class="sdot '+cls+'">'+ic+'</span>'+
+    '<span class="hname">'+esc(h.name)+'</span><span class="hans '+(st==='na'?'n':a.c)+'">'+(st?esc(a.t):'\u2013')+'</span>'+I.chevR+'</button>';
 }
 function habitRow(h,ds){
   var v=val(ds,h),st=status(h,v),sub,sc='';
@@ -1304,6 +1347,7 @@ function habitBody(){
         '<button class="odel" data-a="h-optdel" data-i="'+i+'" aria-label="Remove answer">'+I.minus+'</button>'+
         (t==='multi'?'<span class="odot" style="background:'+o.c+'"></span>':'')+
         '<input data-f="h-opt" data-i="'+i+'" placeholder="Answer '+(i+1)+'" value="'+esc(o.label)+'" maxlength="24">'+
+        mvBtns('h-optmv','data-i="'+i+'"',i,draft.options.length)+
         (t==='single'?'<button class="goal'+(o.goal?' on':'')+'" data-a="h-goal" data-i="'+i+'">'+(o.goal?'★ Goal':'Goal')+'</button>':'')+
       '</div>';
     }).join('')+'<button class="gbtn grow" data-a="h-optadd">'+I.plus+'Add answer</button></div>';
@@ -1350,20 +1394,24 @@ function swatches(cur,action,extra){
 /* legend colors sheet */
 var colorOpen=null;
 function colorsSheet(){colorOpen=null;openSheet({title:'Legend colors',left:'Done',body:'<div id="cb">'+colorsBody()+'</div>'})}
+function mvBtns(action,attr,i,len){
+  return '<span class="mvb"><button data-a="'+action+'" '+attr+' data-dir="-1"'+(i===0?' disabled':'')+' aria-label="Move up">'+I.up+'</button>'+
+    '<button data-a="'+action+'" '+attr+' data-dir="1"'+(i===len-1?' disabled':'')+' aria-label="Move down">'+I.down+'</button></span>';
+}
 function colorsBody(){
-  function item(key,c,label,extra){
+  function item(key,c,label,mv){
     var open=colorOpen===key;
-    return '<div class="cwrap"><button class="crow" data-a="c-open" data-k="'+key+'"><span class="cdot" style="background:'+c+'"></span><span class="gl">'+label+'</span>'+
-      '<span class="rchev">'+(open?I.chevD:I.chevR)+'</span></button>'+(open?swatches(c,'c-set',' data-k="'+key+'"'):'')+'</div>';
+    return '<div class="cwrap"><div class="crow2"><button class="crow" data-a="c-open" data-k="'+key+'"><span class="cdot" style="background:'+c+'"></span><span class="gl">'+label+'</span>'+
+      '<span class="rchev">'+(open?I.chevD:I.chevR)+'</span></button>'+(mv||'')+'</div>'+(open?swatches(c,'c-set',' data-k="'+key+'"'):'')+'</div>';
   }
   var ws=activeWorkouts();
-  var html='<div class="ghint" style="margin:4px 16px 0">Tap an item to change its color everywhere in the app.</div>';
-  html+='<div class="glabel">Workouts</div><div class="group">'+(ws.map(function(w){return item('w:'+w.id,w.c,esc(w.name))}).join('')+item('w:'+REST,restItem().c,'Rest day'))+'</div>';
+  var html='<div class="ghint" style="margin:4px 16px 0">Tap an item to change its color. Use the arrows to change the order \u2014 it changes everywhere in the app.</div>';
+  html+='<div class="glabel">Workouts</div><div class="group">'+(ws.map(function(w,i){return item('w:'+w.id,w.c,esc(w.name),mvBtns('c-mv','data-k="w:'+w.id+'"',i,ws.length))}).join('')+item('w:'+REST,restItem().c,'Rest day'))+'</div>';
   var hsAll=activeHabits();
-  if(hsAll.length)html+='<div class="glabel">Habits</div><div class="group">'+hsAll.map(function(h){return item('h:'+h.id,h.c,esc(h.name))}).join('')+'</div>'+
+  if(hsAll.length)html+='<div class="glabel">Habits</div><div class="group">'+hsAll.map(function(h,i){return item('h:'+h.id,h.c,esc(h.name),mvBtns('c-mv','data-k="h:'+h.id+'"',i,hsAll.length))}).join('')+'</div>'+
     '<div class="ghint">Habit colors are used when you view several things together in the calendar.</div>';
   activeHabits().filter(function(h){return h.type==='multi'&&h.options.length}).forEach(function(h){
-    html+='<div class="glabel">'+esc(h.name)+'</div><div class="group">'+h.options.map(function(o){return item('o:'+h.id+':'+o.id,o.c,esc(o.label))}).join('')+'</div>';
+    html+='<div class="glabel">'+esc(h.name)+'</div><div class="group">'+h.options.map(function(o,i){return item('o:'+h.id+':'+o.id,o.c,esc(o.label),mvBtns('c-mv','data-k="o:'+h.id+':'+o.id+'"',i,h.options.length))}).join('')+'</div>';
   });
   return html;
 }
@@ -1407,6 +1455,38 @@ function noteSheet(){
     mount:function(){setTimeout(function(){var t=$('#note-in');if(t)t.focus()},350)}});
 }
 var numH=null,numDs=null,numFromLog=false;
+var ansH=null,ansDs=null;
+function ansSheet(id){
+  var h=H(id);if(!h)return;
+  if(h.type==='number'){numSheet(id,ui.sel,false);return}
+  ansH=id;ansDs=ui.sel;
+  var multi=h.type==='multi';
+  openSheet({title:esc(h.name),left:'Close',right:multi?'Done':'',rightA:multi?'sheet-close':'',body:'<div id="ansb">'+ansBody()+'</div>'});
+}
+function ansBody(){
+  var h=H(ansH),v=val(ansDs,h),g=hasGoal(h),tiles=[];
+  if(h.type==='check'){
+    tiles=[['1','Done',v===true,'on-g'],['0','Missed',v===false,'on-r'],['na','N/A',v==='na','on-n']].map(function(t){
+      return '<button class="at'+(t[2]?' '+t[3]:'')+'" data-a="ans-check" data-v="'+t[0]+'">'+t[1]+'</button>'});
+  }else if(h.type==='single'){
+    tiles=h.options.map(function(o){var on=v===o.id;
+      return '<button class="at'+(on?((!g||o.goal)?' on-g':' on-o'):'')+'" data-a="ans-single" data-o="'+o.id+'">'+(o.goal&&g?'<span class="star">\u2605</span>':'')+esc(o.label)+'</button>'});
+  }else{
+    var arr=Array.isArray(v)?v:[];
+    tiles=h.options.map(function(o){var on=arr.indexOf(o.id)>-1;
+      return '<button class="at'+(on?' on-c':'')+'"'+(on?' style="background:'+o.c+'"':'')+' data-a="ans-multi" data-o="'+o.id+'"><span class="dot" style="background:'+o.c+'"></span>'+esc(o.label)+'</button>'});
+    tiles.push('<button class="at'+(Array.isArray(v)&&v.length===0?' on-r':'')+'" data-a="ans-none">None</button>');
+  }
+  var cols=tiles.length<=3?tiles.length:2;
+  var sub=dayLabel(ansDs)+(h.type==='single'&&g?' \u00b7 \u2605 = goal':'')+(h.type==='multi'?' \u00b7 pick all that apply':'');
+  var html='<div class="mq">'+esc(sub)+'</div><div class="atiles" style="grid-template-columns:repeat('+cols+',1fr)">'+tiles.join('')+'</div>';
+  html+='<div class="glabel">&nbsp;</div><div class="group">'+
+    '<button class="gbtn grow" data-a="ans-log">'+I.list+'Habit log</button>'+
+    '<button class="gbtn grow" data-a="ans-cal">'+I.cal+'Show in calendar</button>'+
+    (status(h,v)!==null||Array.isArray(v)?'<button class="gbtn red grow" data-a="ans-clear">'+I.trash+'Clear this day</button>':'')+'</div>';
+  return html;
+}
+function ansPicked(){render();var b=$('#ansb');if(b)b.innerHTML=ansBody();setTimeout(function(){if($('#ansb'))closeSheet()},220)}
 function numSheet(hid,ds,fromLog){
   numH=hid;numDs=ds;numFromLog=fromLog;var h=H(hid),v=val(ds,h);
   openSheet({title:esc(h.name),left:'Cancel',right:'Save',rightA:'num-save',body:
@@ -1419,8 +1499,8 @@ function afterNum(){if(numFromLog){var id=numH;logSheet(id);logOpen=numDs;refres
 var fdraft=null;
 function feelSheet(){fdraft=clone(S.feel);openSheet({title:'Mood feelings',left:'Cancel',right:'Save',rightA:'feel-save',body:'<div id="fb">'+feelBody()+'</div>'})}
 function feelBody(){
-  return '<div class="ghint" style="margin:4px 16px 0">These show up when you fill in your morning and evening mood.</div><div class="glabel">Feelings</div><div class="group">'+
-    fdraft.map(function(fe,i){return '<div class="grow opt-row"><button class="odel" data-a="feel-del" data-i="'+i+'" aria-label="Remove">'+I.minus+'</button><input data-f="fe" data-i="'+i+'" value="'+esc(fe.label)+'" maxlength="20" placeholder="Feeling"></div>'}).join('')+
+  return '<div class="ghint" style="margin:4px 16px 0">These show up when you fill in your morning and evening mood. Use the arrows to change the order.</div><div class="glabel">Feelings</div><div class="group">'+
+    fdraft.map(function(fe,i){return '<div class="grow opt-row"><button class="odel" data-a="feel-del" data-i="'+i+'" aria-label="Remove">'+I.minus+'</button><input data-f="fe" data-i="'+i+'" value="'+esc(fe.label)+'" maxlength="20" placeholder="Feeling">'+mvBtns('feel-mv','data-i="'+i+'"',i,fdraft.length)+'</div>'}).join('')+
     '<button class="gbtn grow" data-a="feel-add">'+I.plus+'Add feeling</button></div>';
 }
 
@@ -1663,11 +1743,34 @@ var A={
   'note-open':function(){noteSheet()},
   'note-save':function(){var t=$('#note-in').value.trim();setDay(noteDs,function(x){if(t)x.n=t;else delete x.n});closeSheet();render()},
   'num-open':function(d){numSheet(d.h,d.d||ui.sel,!!d.d)},
+  'ans-open':function(d){ansSheet(d.id)},
+  'ans-check':function(d){var h=H(ansH),v=d.v==='1'?true:d.v==='0'?false:'na';setLog(ansDs,h,val(ansDs,h)===v?undefined:v);ansPicked()},
+  'ans-single':function(d){var h=H(ansH);setLog(ansDs,h,val(ansDs,h)===d.o?undefined:d.o);ansPicked()},
+  'ans-multi':function(d){
+    var h=H(ansH),cur=val(ansDs,h),arr=Array.isArray(cur)?cur.filter(function(id){return optOf(h,id)}):[];
+    var i=arr.indexOf(d.o);if(i>-1)arr.splice(i,1);else arr.push(d.o);
+    arr.sort(function(a,b){return h.options.indexOf(optOf(h,a))-h.options.indexOf(optOf(h,b))});
+    setLog(ansDs,h,arr.length?arr:undefined);render();$('#ansb').innerHTML=ansBody();
+  },
+  'ans-none':function(){var h=H(ansH),cur=val(ansDs,h);setLog(ansDs,h,(Array.isArray(cur)&&cur.length===0)?undefined:[]);ansPicked()},
+  'ans-clear':function(){setLog(ansDs,H(ansH),undefined);closeSheet();render()},
+  'ans-log':function(){logSheet(ansH)},
+  'ans-cal':function(){ui.view='h:'+ansH;closeSheet();render();scrollToCal()},
   'num-save':function(){var h=H(numH),n=parseNum($('#num-in').value);if(n!==null&&isNaN(n)){toast('Enter a number');return}setLog(numDs,h,n===null?undefined:n);afterNum()},
   'num-clear':function(){setLog(numDs,H(numH),undefined);afterNum()},
   'h-gdir':function(d,el){draft.gdir=d.g;$$('button',el.parentNode).forEach(function(b){b.classList.toggle('on',b===el)})},
   'feel-edit':function(){feelSheet()},
   'feel-add':function(){fdraft.push({id:uid(),label:''});$('#fb').innerHTML=feelBody();var ins=$$('[data-f="fe"]');if(ins.length)ins[ins.length-1].focus()},
+  'feel-mv':function(d){var i=+d.i,j=i+(+d.dir);if(j<0||j>=fdraft.length)return;var t=fdraft[i];fdraft[i]=fdraft[j];fdraft[j]=t;$('#fb').innerHTML=feelBody()},
+  'h-optmv':function(d){var i=+d.i,j=i+(+d.dir),a=draft.options;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;rerenderHabit()},
+  'c-mv':function(d){
+    var p=d.k.split(':'),dir=+d.dir;
+    if(p[0]==='w')moveIn(activeWorkouts(),p[1],dir);
+    else if(p[0]==='h')moveIn(activeHabits(),p[1],dir);
+    else{var h=H(p[1]),i=h.options.findIndex(function(o){return o.id===p[2]}),j=i+dir;if(i<0||j<0||j>=h.options.length)return;
+      var t=h.options[i];h.options[i]=h.options[j];h.options[j]=t;h.u=Date.now();touch();render()}
+    $('#cb').innerHTML=colorsBody();
+  },
   'feel-del':function(d){fdraft.splice(+d.i,1);$('#fb').innerHTML=feelBody()},
   'feel-save':function(){S.feel=fdraft.filter(function(fe){fe.label=fe.label.trim();return fe.label});S.feelU=Date.now();touch();closeSheet();render();toast('Feelings saved')},
   'h-eye':function(d){
