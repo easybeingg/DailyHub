@@ -274,6 +274,15 @@ button.hn{display:block;text-align:left}
 .yhead{display:flex;align-items:center;justify-content:space-between;margin:-4px -4px 8px 2px}
 .yhead .sum-h{margin:0}
 .yr{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 14px}
+.yr.two{grid-template-columns:1fr 1fr;gap:18px}
+.yr.two .mm-g{gap:3px}
+.yr.two .mm-g i{border-radius:5px}
+.yr.two .mm-n{font-size:15px;margin-bottom:8px}
+.pseg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--fill);border-radius:9px;padding:2px;gap:2px;margin:0 0 14px}
+.pseg button{height:30px;border-radius:7px;font-size:12.5px;font-weight:600;text-align:center;color:var(--label2)}
+.pseg button.on{background:var(--segon);color:var(--label);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.yexp{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:14px;padding:8px;color:var(--accent);font-size:15px;font-weight:600}
+.yexp svg{width:14px;height:14px;stroke-width:2.8}
 .mm{text-align:left;min-width:0;display:flex;flex-direction:column;justify-content:flex-start;align-self:start}
 .mm-n{font-size:13px;font-weight:600;margin-bottom:5px;color:var(--label)}
 .mm-n.cur{color:var(--accent)}
@@ -282,6 +291,8 @@ button.hn{display:block;text-align:left}
 .mm-g i.e{visibility:hidden}
 .mm-g i.d{background:var(--green)}
 .mm-g i.n{background:var(--orange);opacity:.75}
+.mm-g i.hp{background:color-mix(in srgb,var(--green) 45%,transparent)}
+.mm-g i.hz{background:var(--red-t)}
 .mm-g i.f{background:transparent;box-shadow:inset 0 0 0 1px var(--fill)}
 .mm-g i.t{box-shadow:0 0 0 1.5px var(--accent)}
 
@@ -448,7 +459,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 <script>
 (function(){
 'use strict';
-var VERSION='2.2';
+var VERSION='2.3';
 var KEY='hh_data_v1', UIKEY='hh_ui_v1', SKEY='hh_sync_v1';
 var DEFAULT_URL='https://arqdaubaruecjwzgcuhe.supabase.co';
 var TABLE='habithub_data';
@@ -1160,43 +1171,80 @@ function avatarInner(p){
   if(n){var parts=n.split(/\s+/);return esc((parts[0][0]+(parts.length>1?parts[parts.length-1][0]:'')).toUpperCase())}
   return I.personFill;
 }
+function yCell(ds,mode){
+  if(mode==='workouts'){
+    var dn=wdone(ds);if(dn.length)return ' style="background:'+dn[0].c+'"';
+    if(isRest(ds))return ' style="background:'+restItem().c+'"';
+    return '';
+  }
+  if(mode==='mood'){var mv=dayMood(ds);return mv?' style="background:'+MOODS[Math.round(mv)].c+'"':''}
+  if(mode==='habits'){
+    var con=0,dn2=0,lg=0;
+    S.habits.forEach(function(h){
+      if(h.hidden)return;
+      var st=status(h,val(ds,h));
+      if(st==='na')return;
+      if(st||applies(h,ds)){con++;if(st){lg++;if(st==='done')dn2++}}
+    });
+    if(!con||!lg)return '';
+    if(dn2===con)return ' class="d"';
+    if(dn2>0)return ' class="hp"';
+    return ' class="hz"';
+  }
+  var r=dayReg(ds);
+  if(!r.need)return '';
+  if(isDone(r))return ' class="d"';
+  return ds<today()?' class="n"':'';
+}
+function yMonth(y,m,mode,big){
+  var t=today(),n=new Date(),off=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate(),cells='';
+  for(var e=0;e<off;e++)cells+='<i class="e"></i>';
+  for(var d=1;d<=dim;d++){
+    var ds=ymd(new Date(y,m,d)),a='';
+    if(ds>t)a=' class="f"';else a=yCell(ds,mode);
+    if(ds===t)a=a.indexOf('class="')>-1?a.replace('class="','class="t '):a+' class="t"';
+    cells+='<i'+a+'></i>';
+  }
+  var cur=y===n.getFullYear()&&m===n.getMonth(),dt=new Date(y,m,1);
+  return '<button class="mm" data-a="ym" data-y="'+y+'" data-m="'+m+'"><div class="mm-n'+(cur?' cur':'')+'">'+esc(big?monthName(dt):monthShort(dt))+'</div><div class="mm-g">'+cells+'</div></button>';
+}
+function yLegend(mode){
+  if(mode==='workouts'){var ws=activeWorkouts();return '<div class="legend" style="padding-top:14px">'+ws.map(function(w){return li(w.c,esc(w.name))}).join('')+li(restItem().c,'Rest day')+'</div>'}
+  if(mode==='mood')return '<div class="legend" style="padding-top:14px">'+MOODS.slice(1).reverse().map(function(m){return li(m.c,m.l)}).join('')+'</div>';
+  if(mode==='habits')return '<div class="legend" style="padding-top:14px">'+li('var(--green)','All done')+li('color-mix(in srgb,var(--green) 45%,transparent)','Some done')+li('var(--red-t)','None done')+'</div>';
+  return '<div class="legend" style="padding-top:14px">'+li('var(--green)','Done')+li('var(--orange)','Incomplete')+'</div>';
+}
 function renderProfilePage(){
-  var p=S.profile,n=new Date(),y=ui.year,t=today();
+  var p=S.profile,n=new Date(),y=ui.year,mode=ui.pmode||'all';
   var sub=[p.age?esc(p.age)+' yrs':'',p.height?esc(p.height)+' cm':'',p.gender?esc(p.gender):''].filter(Boolean).join(' · ');
   var html='<h1 class="big">Profile</h1><section class="card phead">'+
     '<button class="avatar xl" data-a="profile-edit" aria-label="Edit profile">'+avatarInner(p)+'</button>'+
     '<div class="pname">'+(p.name?esc(p.name):'<span class="ph">Your name</span>')+'</div>'+
     (sub?'<div class="psub">'+sub+'</div>':'')+(p.bio?'<div class="pbio">'+esc(p.bio)+'</div>':'')+
     '<button class="pedit" data-a="profile-edit">Edit profile</button></section>';
-  var sk=doneStreaks();
   html+='<section class="card pcard"><div class="sum-h">'+esc(monthName(n))+' so far</div>'+overviewTiles(n.getFullYear(),n.getMonth())+'</section>';
-  /* year view */
-  var months='',yDone=0,yTracked=0,per={},rest=0;
-  for(var m=0;m<12;m++){
-    var off=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate(),cells='';
-    for(var e=0;e<off;e++)cells+='<i class="e"></i>';
-    for(var d=1;d<=dim;d++){
-      var ds=ymd(new Date(y,m,d)),cls='';
-      if(ds>t)cls='f';
-      else{
-        var r=dayReg(ds);
-        if(r.need){yTracked++;if(isDone(r)){cls='d';yDone++}else if(ds<t)cls='n'}
-        wdone(ds).forEach(function(w){per[w.id]=(per[w.id]||0)+1});
-        if(isRest(ds))rest++;
-      }
-      if(ds===t)cls+=' t';
-      cells+='<i class="'+cls+'"></i>';
-    }
-    var cur=y===n.getFullYear()&&m===n.getMonth();
-    months+='<button class="mm" data-a="ym" data-m="'+m+'"><div class="mm-n'+(cur?' cur':'')+'">'+esc(monthShort(new Date(y,m,1)))+'</div><div class="mm-g">'+cells+'</div></button>';
+  /* calendar summary: last 2 months, or the whole year */
+  var seg='<div class="pseg">'+[['all','Overview'],['habits','Habits'],['workouts','Workouts'],['mood','Mood']].map(function(o){
+    return '<button class="'+(mode===o[0]?'on':'')+'" data-a="pmode" data-m="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div>';
+  var body,head;
+  if(ui.yexp){
+    var months='';for(var m=0;m<12;m++)months+=yMonth(y,m,mode,false);
+    head='<div class="yhead"><div class="sum-h">'+y+'</div><div class="navbtns">'+
+      '<button class="nbtn" data-a="y-prev" aria-label="Previous year">'+I.chevL+'</button><button class="nbtn" data-a="y-next" aria-label="Next year">'+I.chevR+'</button></div></div>';
+    body='<div class="yr">'+months+'</div>';
+  }else{
+    var pm=new Date(n.getFullYear(),n.getMonth()-1,1);
+    head='<div class="sum-h">Last two months</div>';
+    body='<div class="yr two">'+yMonth(pm.getFullYear(),pm.getMonth(),mode,true)+yMonth(n.getFullYear(),n.getMonth(),mode,true)+'</div>';
   }
-  html+='<section class="card pcard"><div class="sum-h">Streaks</div><div class="tiles">'+tile(sk.cur,'Current streak','g')+tile(sk.best,'Best streak')+tile(yDone,'Done days in '+y)+'</div></section>';
-  html+='<section class="card pcard"><div class="yhead"><div class="sum-h">'+y+'</div><div class="navbtns">'+
-    '<button class="nbtn" data-a="y-prev" aria-label="Previous year">'+I.chevL+'</button><button class="nbtn" data-a="y-next" aria-label="Next year">'+I.chevR+'</button></div></div>'+
-    '<div class="yr">'+months+'</div><div class="legend" style="padding-top:14px">'+li('var(--green)','Done')+li('var(--orange)','Incomplete')+'</div></section>';
+  html+='<section class="card pcard">'+head+seg+body+yLegend(mode)+
+    '<button class="yexp" data-a="yexp">'+(ui.yexp?'Show less '+I.chevU:'Show whole year '+I.chevD)+'</button></section>';
+  /* workouts this year */
+  var wy=ui.yexp?y:n.getFullYear(),per={},rest=0,t=today();
+  for(var ds=wy+'-01-01';ds<=wy+'-12-31'&&ds<=t;ds=addDays(ds,1)){wdone(ds).forEach(function(w){per[w.id]=(per[w.id]||0)+1});if(isRest(ds))rest++}
   var ws=S.workouts.filter(function(w){return !w.archived||per[w.id]});
   if(ws.length){
-    html+='<section class="card pcard"><div class="sum-h">Workouts in '+y+'</div>'+
+    html+='<section class="card pcard"><div class="sum-h">Workouts in '+wy+'</div>'+
       bars(ws.map(function(w){return {l:'<span class="cd" style="background:'+w.c+'"></span>'+esc(w.name),n:per[w.id]||0,c:w.c}}).concat([{l:'<span class="cd" style="background:'+restItem().c+'"></span>Rest day',n:rest,c:restItem().c}]))+'</section>';
   }
   return html;
@@ -1946,7 +1994,9 @@ var A={
   'photo-rm':function(){pdraft.photo='';refreshPhoto()},
   'y-prev':function(){ui.year--;render()},
   'y-next':function(){ui.year++;render()},
-  'ym':function(d){ui.tab='home';ui.view='all';ui.collapsed=false;saveUI();goMonth(ui.year,+d.m);render();window.scrollTo(0,0)},
+  'ym':function(d){ui.tab='home';ui.view=({habits:'all',workouts:'wall',mood:'mood'})[ui.pmode]||'all';ui.collapsed=false;saveUI();goMonth(d.y?+d.y:ui.year,+d.m);render();window.scrollTo(0,0)},
+  'pmode':function(d){ui.pmode=d.m;render()},
+  'yexp':function(){ui.yexp=!ui.yexp;ui.year=new Date().getFullYear();render()},
   'sync-setup':function(){syncSheet()},
   'sync-signin':function(){
     var url=(sdraft.url||'').trim().replace(/\/+$/,''),key=(sdraft.key||'').trim(),email=(sdraft.email||'').trim(),pw=sdraft.pw||'';
