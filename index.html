@@ -61,17 +61,28 @@ body.locked{overflow:hidden}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;-webkit-user-select:none;user-select:none;text-align:inherit}
 button:disabled{cursor:default}
 svg{display:block}
-#app{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 96px)}
+#app{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 110px)}
 .eyebrow{font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--label2);margin:0 2px 4px}
 .big{font-size:32px;font-weight:700;letter-spacing:-.025em;margin:0 2px 16px;line-height:1.15}
 
 /* Tab bar */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
-  border-top:.5px solid var(--sep);padding-bottom:env(safe-area-inset-bottom)}
-.tabbar .in{display:grid;grid-template-columns:repeat(3,1fr);max-width:560px;margin:0 auto}
-.tab{height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:600;color:var(--gray);text-align:center}
-.tab svg{width:25px;height:25px}
-.tab.on{color:var(--accent)}
+:root{--glass:rgba(255,255,255,.7);--glassb:rgba(0,0,0,.07);--tabon:rgba(120,120,128,.16)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--glass:rgba(44,44,46,.66);--glassb:rgba(255,255,255,.1);--tabon:rgba(120,120,128,.32)}}
+:root[data-theme="dark"]{--glass:rgba(44,44,46,.66);--glassb:rgba(255,255,255,.1);--tabon:rgba(120,120,128,.32)}
+/* floating tab bar: content scrolls behind it; shrinks while scrolling down */
+.tabbar{position:fixed;z-index:40;left:50%;bottom:calc(env(safe-area-inset-bottom) + 12px);transform:translateX(-50%);
+  width:min(340px,calc(100% - 40px));height:64px;padding:5px;border-radius:32px;background:var(--glass);
+  -webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);
+  box-shadow:0 10px 30px rgba(0,0,0,.16),0 1px 3px rgba(0,0,0,.08),inset 0 0 0 .5px var(--glassb);
+  transition:width .35s cubic-bezier(.3,.8,.2,1),height .35s cubic-bezier(.3,.8,.2,1)}
+.tabbar .in{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;height:100%}
+.tab{height:100%;border-radius:27px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--label2);text-align:center;transition:background .2s,color .2s}
+.tab svg{width:24px;height:24px;flex:none;transition:width .3s,height .3s}
+.tab .tl2{max-height:14px;overflow:hidden;transition:max-height .3s,opacity .2s}
+.tab.on{color:var(--accent);background:var(--tabon)}
+.tabbar.mini{width:min(200px,calc(100% - 40px));height:50px}
+.tabbar.mini .tab .tl2{max-height:0;opacity:0}
+.tabbar.mini .tab svg{width:22px;height:22px}
 
 /* Cards + calendar */
 .card{background:var(--card);border-radius:20px;box-shadow:var(--shadow)}
@@ -425,7 +436,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 .dlg-b button{height:44px;font-size:17px;color:var(--accent);text-align:center}
 .dlg-b button+button{border-left:.5px solid var(--sep);font-weight:600}
 .dlg-b .red{color:var(--red)}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 76px);transform:translate(-50%,20px);opacity:0;z-index:90;
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 92px);transform:translate(-50%,20px);opacity:0;z-index:90;
   background:rgba(30,30,30,.92);color:#fff;font-size:15px;font-weight:500;padding:11px 18px;border-radius:22px;transition:all .25s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 @media (max-width:360px){.big{font-size:28px}.day{height:54px}.num{width:31px;height:31px;font-size:15px}}
@@ -437,7 +448,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 <script>
 (function(){
 'use strict';
-var VERSION='2.0';
+var VERSION='2.2';
 var KEY='hh_data_v1', UIKEY='hh_ui_v1', SKEY='hh_sync_v1';
 var DEFAULT_URL='https://arqdaubaruecjwzgcuhe.supabase.co';
 var TABLE='habithub_data';
@@ -792,9 +803,16 @@ function render(){
   var html=ui.tab==='home'?renderHome():ui.tab==='profile'?renderProfilePage():renderSettingsPage();
   $('#app').innerHTML='<div class="pg">'+html+'</div>'+tabbar();
 }
+var miniTab=false;
+window.addEventListener('scroll',function(){
+  var y=window.scrollY||0,max=document.documentElement.scrollHeight-window.innerHeight;
+  /* small while scrolling in either direction; full size at the very top and at the very bottom */
+  var want=!(y<30||y>=max-4);
+  if(want!==miniTab){miniTab=want;var t=document.querySelector('.tabbar');if(t)t.classList.toggle('mini',miniTab)}
+},{passive:true});
 function tabbar(){
-  function t(k,ic,l){return '<button class="tab'+(ui.tab===k?' on':'')+'" data-a="tab" data-t="'+k+'">'+ic+l+'</button>'}
-  return '<nav class="tabbar"><div class="in">'+t('home',I.home,'Home')+t('profile',I.person,'Profile')+t('settings',I.sliders,'Settings')+'</div></nav>';
+  function t(k,ic,l){return '<button class="tab'+(ui.tab===k?' on':'')+'" data-a="tab" data-t="'+k+'" aria-label="'+l+'">'+ic+'<span class="tl2">'+l+'</span></button>'}
+  return '<nav class="tabbar'+(miniTab?' mini':'')+'"><div class="in">'+t('home',I.home,'Home')+t('profile',I.person,'Profile')+t('settings',I.sliders,'Settings')+'</div></nav>';
 }
 function dateEyebrow(){var t=new Date();return '<div class="eyebrow">'+esc(weekday(t)+' '+t.getDate()+' '+monthName(t))+'</div>'}
 function renderHome(){
