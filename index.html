@@ -371,6 +371,27 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 .mhead b{font-size:13px;font-weight:600;color:var(--label2);text-transform:uppercase;letter-spacing:.02em}
 .mhead span{font-size:13px;color:var(--label3);font-weight:500}
 .mslots{display:grid;grid-template-columns:1fr;gap:8px}
+/* inline mood: faces + feelings appear in the card itself */
+.mrow{display:flex;align-items:center;gap:12px;width:100%;min-height:54px;text-align:left}
+.mpick{display:flex;align-items:center;gap:10px;flex:none;text-align:left}
+.mpick svg,.mface0 svg{width:40px;height:40px}
+.mface0{color:var(--label3);display:flex}
+.mrow .mlab{font-size:17px;font-weight:600}
+.mrow .mlab.ph{color:var(--label3);font-weight:500;font-size:16px}
+.mtags{display:flex;flex-wrap:wrap;gap:6px;flex:1;justify-content:flex-end;min-width:0}
+.mtag{font-size:13px;font-weight:600;padding:6px 11px;border-radius:14px;background:var(--fill);color:var(--label)}
+.mtag.plus{color:var(--accent);padding:6px 12px}
+.mfaces{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;animation:mfade .22s ease}
+.mf{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0 6px;border-radius:14px;color:var(--label2);text-align:center}
+.mf svg{width:40px;height:40px}
+.mf span{font-size:11px;font-weight:600}
+.mf.on{background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c)}
+.fbar{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0 2px;animation:mfade .22s ease}
+.fbar .chip{height:34px}
+@keyframes mfade{from{opacity:0;transform:translateY(-4px)}}
+.me svg{width:13px;height:13px}
+.me{display:inline-flex}
+.bl .me svg{width:16px;height:16px}
 .mslot{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:var(--fill2);min-width:0;text-align:left}
 .mface{width:42px;height:42px;border-radius:50%;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
 .mface svg{width:21px;height:21px;color:var(--label2)}
@@ -459,7 +480,7 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 <script>
 (function(){
 'use strict';
-var VERSION='2.4';
+var VERSION='2.8';
 var KEY='hh_data_v1', UIKEY='hh_ui_v1', SKEY='hh_sync_v1';
 var DEFAULT_URL='https://arqdaubaruecjwzgcuhe.supabase.co';
 var TABLE='habithub_data';
@@ -533,6 +554,14 @@ function mkHabit(name,type,options,o){return {id:uid(),name:name,type:type,optio
 function mkWorkout(name,c,o){return {id:uid(),name:name,c:c,created:today(),archived:null,o:o,u:1}}
 function seedWorkouts(){return [mkWorkout('Push day','#ff9500',0),mkWorkout('Pull day','#007aff',1),mkWorkout('Leg day','#af52de',2),mkWorkout('Running','#34c759',3)]}
 var MOODS=[null,{v:1,e:'\ud83d\ude22',l:'Bad',c:'#ff3b30'},{v:2,e:'\ud83d\ude41',l:'Low',c:'#ff9500'},{v:3,e:'\ud83d\ude10',l:'Okay',c:'#ffcc00'},{v:4,e:'\ud83d\ude42',l:'Good',c:'#8fd14f'},{v:5,e:'\ud83d\ude04',l:'Great',c:'#34c759'}];
+var FACE={
+  5:'<path d="M8 10.2q1.2-1.6 2.4 0M13.6 10.2q1.2-1.6 2.4 0"/><path d="M7.6 13.6q4.4 5 8.8 0z" fill="currentColor" fill-opacity=".18"/>',
+  4:'<circle cx="9.2" cy="10" r=".9" fill="currentColor" stroke="none"/><circle cx="14.8" cy="10" r=".9" fill="currentColor" stroke="none"/><path d="M8.6 14.2q3.4 3 6.8 0"/>',
+  3:'<circle cx="9.2" cy="10" r=".9" fill="currentColor" stroke="none"/><circle cx="14.8" cy="10" r=".9" fill="currentColor" stroke="none"/><path d="M9 15h6"/>',
+  2:'<circle cx="9.2" cy="10.2" r=".9" fill="currentColor" stroke="none"/><circle cx="14.8" cy="10.2" r=".9" fill="currentColor" stroke="none"/><path d="M9 16.2q3-2.4 6 0"/>',
+  1:'<path d="M7.8 9.4l2.6-1.2M16.2 9.4l-2.6-1.2"/><circle cx="9.4" cy="11" r=".9" fill="currentColor" stroke="none"/><circle cx="14.6" cy="11" r=".9" fill="currentColor" stroke="none"/><path d="M8.6 17q3.4-3.4 6.8 0"/>'
+};
+function faceSvg(v){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.6"/>'+FACE[v]+'</svg>'}
 function defaultFeel(){return [['f1','Energetic'],['f2','Rested'],['f3','Tired'],['f4','Stressed'],['f5','Calm'],['f6','Sick']].map(function(x){return {id:x[0],label:x[1]}})}
 function seed(){
   return {v:3,pristine:true,profile:emptyProfile(),
@@ -841,15 +870,26 @@ function renderHome(){
     (ui.sec==='habits'?renderHabitsDay():renderWorkoutsDay());
 }
 function renderMoodCard(){
-  var ds=ui.sel,d=DAY(ds);
-  function slot(k,icon,label,q){
-    var x=d[k],m=x&&x.v?MOODS[x.v]:null,fl=x&&x.f?x.f.map(feelOf).filter(Boolean).map(function(f){return f.label}):[];
-    var sub=m?m.l+(fl.length?' \u00b7 '+fl.join(', '):''):fl.length?fl.join(', '):q;
-    return '<button class="mslot" data-a="mood-open" data-k="'+k+'"><span class="mface"'+(m?' style="background:color-mix(in srgb,'+m.c+' 24%,transparent)"':'')+'>'+(m?m.e:icon)+'</span>'+
-      '<span class="mtx"><span class="mlab">'+label+'</span><span class="msub">'+esc(sub)+'</span></span></button>';
-  }
-  return '<section class="card mood"><div class="mhead"><b>How are you?</b><span>'+esc(dayLabel(ds))+'</span></div>'+
-    '<div class="mslots">'+slot('m',I.smile,'Mood','Tap to fill in how you feel today')+'</div>'+
+  var ds=ui.sel,d=DAY(ds),x=d.m||{},v=x.v,fl=(x.f||[]).map(feelOf).filter(Boolean);
+  if(ui.moodDay!==ds){ui.moodDay=ds;ui.moodStep=null}
+  var step=ui.moodStep,body;
+  var tags=fl.map(function(f){return '<button class="mtag" data-a="mood-step" data-s="edit">'+esc(f.label)+'</button>'}).join('')+
+    '<button class="mtag plus" data-a="mood-step" data-s="edit">Edit</button>';
+  var chosen='<div class="mrow">'+(v?'<button class="mpick" data-a="mood-step" data-s="face" style="color:'+MOODS[v].c+'">'+faceSvg(v)+'<span class="mlab">'+MOODS[v].l+'</span></button>'
+      :'<button class="mpick" data-a="mood-step" data-s="face"><span class="mface0">'+faceSvg(3)+'</span><span class="mlab ph">Mood</span></button>')+
+    '<div class="mtags">'+tags+'</div></div>';
+  var faces='<div class="mfaces">'+MOODS.slice(1).reverse().map(function(md){
+      return '<button class="mf'+(v===md.v?' on':'')+'" style="--c:'+md.c+'" data-a="mood-tap" data-v="'+md.v+'">'+faceSvg(md.v)+'<span>'+md.l+'</span></button>';
+    }).join('')+'</div>';
+  var on=x.f||[];
+  var fbar=S.feel.length?'<div class="fbar">'+S.feel.map(function(f){
+      return '<button class="chip'+(on.indexOf(f.id)>-1?' on-a':'')+'" data-a="mood-fq" data-id="'+f.id+'">'+esc(f.label)+'</button>'}).join('')+
+      '<button class="chip ghost" data-a="mood-step" data-s="">'+(step==='edit'?'Close':'Skip')+'</button></div>':'';
+  if(step==='feel')body=chosen+fbar;
+  else if(step==='edit')body=faces+fbar;
+  else if(step==='face'||!(v||fl.length))body=faces;
+  else body=chosen;
+  return '<section class="card mood"><div class="mhead"><b>How are you?</b><span>'+esc(dayLabel(ds))+'</span></div>'+body+
     '<button class="mnote" data-a="note-open">'+I.note+(d.n?'<span class="tx">'+esc(d.n)+'</span>':'<span class="tx ph">Add a note for this day</span>')+'</button></section>';
 }
 function calDates(){
@@ -899,7 +939,7 @@ function dayCell(date,v){
     }else if(v.k==='mood'){
       var dd=DAY(ds),mv=dayMood(ds);
       if(mv){c.style='background:color-mix(in srgb,'+MOODS[Math.round(mv)].c+' 30%,transparent)'}
-      c.under=[dd.m,dd.e].map(function(x){return x&&x.v?'<span class="me">'+MOODS[x.v].e+'</span>':''}).join('');
+      c.under=[dd.m,dd.e].map(function(x){return x&&x.v?'<span class="me" style="color:'+MOODS[x.v].c+'">'+faceSvg(x.v)+'</span>':''}).join('');
     }else if(v.k==='wall'){
       var dn=wdone(ds);
       if(dn.length)c.under=dn.slice(0,4).map(function(w){return '<span class="cd" style="background:'+w.c+'"></span>'}).join('');
@@ -935,7 +975,7 @@ function legend(v){
     return ws.length?'<div class="legend">'+ws.map(function(w){return li(w.c,esc(w.name))}).join('')+'</div>':'';
   }
   var h=v.x;
-  if(h.type==='check')return '<div class="legend">'+li('var(--green)','Done')+li('var(--red)','Missed')+li('var(--gray)','N/A')+'</div>';
+  if(h.type==='check')return '<div class="legend">'+li('var(--green)','Yes')+li('var(--red)','No')+li('var(--gray)','N/A')+'</div>';
   if(h.type==='number')return h.goal!=null?'<div class="legend">'+li('var(--green)','On goal')+li('var(--orange)','Not on goal')+'</div>':'';
   if(h.type==='single')return hasGoal(h)?'<div class="legend">'+li('var(--green)','On goal')+li('var(--orange)','Other answer')+'</div>':'';
   return '<div class="legend">'+h.options.map(function(o){return li(o.c,esc(o.label))}).join('')+li('var(--red)','None')+'</div>';
@@ -1005,7 +1045,7 @@ function summary(v){
     if(h.type==='multi'&&Array.isArray(vv))vv.forEach(function(id){cnt[id]=(cnt[id]||0)+1});
   });
   var sk=streak(h),head='<div class="sum"><div class="sum-h">'+esc(h.name)+' in '+mn+'</div>';
-  if(h.type==='check')return head+'<div class="tiles">'+tile(done,'Done','g')+tile(miss,'Missed','r')+tile(sk,'Day streak')+'</div></div>';
+  if(h.type==='check')return head+'<div class="tiles">'+tile(done,'Yes','g')+tile(miss,'No','r')+tile(sk,'Day streak')+'</div></div>';
   if(h.type==='number'){
     var nn=0,sum=0;days.forEach(function(ds){var vv=val(ds,h);if(typeof vv==='number'){nn++;sum+=vv}});
     var avg=nn?fmtNum(sum/nn):'\u2013',u=h.unit?' ('+esc(h.unit)+')':'';
@@ -1030,7 +1070,7 @@ function moodSummary(y,m,mn){
   }
   var fl=S.feel.filter(function(f){return fc[f.id]});
   return '<div class="sum"><div class="sum-h">Mood in '+mn+'</div><div class="tiles">'+tile(logged,'Days logged')+tile(good,'Good days','g')+tile(low,'Low days','o')+'</div>'+
-    bars(MOODS.slice(1).reverse().map(function(md){return {l:md.e+' '+md.l,n:cnt[md.v],c:md.c}}))+
+    bars(MOODS.slice(1).reverse().map(function(md){return {l:'<span class="me" style="color:'+md.c+'">'+faceSvg(md.v)+'</span>'+md.l,n:cnt[md.v],c:md.c}}))+
     (fl.length?'<div class="sum-h" style="margin-top:16px">How you felt</div>'+bars(fl.map(function(f){return {l:esc(f.label),n:fc[f.id],c:'var(--accent)'}})):'')+'</div>';
 }
 function dayHead(showEdit){
@@ -1039,7 +1079,7 @@ function dayHead(showEdit){
     '<div class="sec-title">'+esc(d.getDate()+' '+monthName(d)+(d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():''))+'</div></div>'+
     (showEdit?'<button class="txt" data-a="edit-toggle">'+(ui.edit?'Done':'Edit')+'</button>':'')+'</div>';
 }
-var TYPE_LABEL={check:'Done / Missed',single:'Single choice',multi:'Multiple choice',number:'Number'};
+var TYPE_LABEL={check:'Yes / No',single:'Single choice',multi:'Multiple choice',number:'Number'};
 function editBtns(kind,id,i,len){
   return '<div class="ebtns"><button data-a="'+kind+'-up" data-id="'+id+'"'+(i===0?' disabled':'')+' aria-label="Move up">'+I.up+'</button>'+
     '<button data-a="'+kind+'-down" data-id="'+id+'"'+(i===len-1?' disabled':'')+' aria-label="Move down">'+I.down+'</button>'+
@@ -1102,7 +1142,7 @@ function habitLine(h,ds){
 function habitRow(h,ds){
   var v=val(ds,h),st=status(h,v),sub,sc='';
   if(!st)sub='Not filled in';
-  else if(h.type==='check'){sub=st==='done'?'Done':st==='na'?'N/A':'Missed';sc=st==='done'?'g':st==='na'?'':'r'}
+  else if(h.type==='check'){sub=st==='done'?'Yes':st==='na'?'N/A':'No';sc=st==='done'?'g':st==='na'?'':'r'}
   else if(h.type==='number'){sub=esc(numText(h,v))+(h.goal!=null?(st==='done'?' \u00b7 On goal':' \u00b7 Not on goal'):'');sc=st==='done'?'g':'o'}
   else if(h.type==='single'){var o=optOf(h,v);sub=esc(o.label)+(hasGoal(h)?(st==='done'?' · On goal':' · Not on goal'):'');sc=st==='done'?'g':'o'}
   else{
@@ -1118,8 +1158,8 @@ function habitRow(h,ds){
 function controls(h,v,ds){
   var id=' data-h="'+h.id+'"'+(ds?' data-d="'+ds+'"':'');
   if(h.type==='check'){
-    return '<div class="chips"><button class="chip'+(v===true?' on-g':'')+'" data-a="log-check"'+id+' data-v="1">Done</button>'+
-      '<button class="chip'+(v===false?' on-r':'')+'" data-a="log-check"'+id+' data-v="0">Missed</button>'+
+    return '<div class="chips"><button class="chip'+(v===true?' on-g':'')+'" data-a="log-check"'+id+' data-v="1">Yes</button>'+
+      '<button class="chip'+(v===false?' on-r':'')+'" data-a="log-check"'+id+' data-v="0">No</button>'+
       '<button class="chip'+(v==='na'?' on-n':'')+'" data-a="log-check"'+id+' data-v="na">N/A</button></div>';
   }
   if(h.type==='number'){
@@ -1352,7 +1392,7 @@ function monthPicker(){
   YEARS=[];for(var y=first;y<=cy+5;y++)YEARS.push(y);
   var mh=MONTHS.map(function(m,i){return '<button class="wi" data-a="wi" data-i="'+i+'">'+m+'</button>'}).join('');
   var yh=YEARS.map(function(y,i){return '<button class="wi" data-a="wi" data-i="'+i+'">'+y+'</button>'}).join('');
-  openSheet({title:'Choose month',left:'Cancel',right:'Done',rightA:'mp-done',body:
+  openSheet({title:'Choose month',left:'Close',right:'Done',rightA:'mp-done',body:
     '<div class="wheels"><div class="wband"></div>'+
       '<div class="wheel" id="wh-m"><div class="wsp"></div>'+mh+'<div class="wsp"></div></div>'+
       '<div class="wheel" id="wh-y"><div class="wsp"></div>'+yh+'<div class="wsp"></div></div>'+
@@ -1394,7 +1434,7 @@ function profileSheet(){
   pdraft=clone(S.profile);
   var g=['','Male','Female','Other'].map(function(x){return '<option value="'+x+'"'+(pdraft.gender===x?' selected':'')+'>'+(x||'Not set')+'</option>'}).join('');
   if(pdraft.gender&&['Male','Female','Other'].indexOf(pdraft.gender)<0)g+='<option selected value="'+esc(pdraft.gender)+'">'+esc(pdraft.gender)+'</option>';
-  openSheet({title:'Profile',left:'Cancel',right:'Done',rightA:'profile-save',body:
+  openSheet({title:'Profile',left:'Close',right:'Done',rightA:'profile-save',body:
     '<div class="ph-edit"><div class="avatar xl" id="pv-av">'+avatarInner(pdraft)+'</div><div class="ph-btns" id="pv-btns">'+photoBtns()+'</div></div>'+
     '<div class="glabel">About you</div><div class="group">'+
       '<div class="grow"><label for="f-name">Name</label><input id="f-name" data-f="p-name" placeholder="Your name" value="'+esc(pdraft.name)+'" autocomplete="name"></div>'+
@@ -1433,7 +1473,7 @@ function habitSheet(id){
   var h=id?H(id):null;
   draft=h?clone(h):{id:null,name:'',type:'check',options:[],days:ALLDAYS.slice(),created:today(),bg:null,unit:'',goal:null,gdir:'min'};
   draft.goalS=draft.goal!=null?fmtNum(draft.goal):'';
-  openSheet({title:h?'Edit habit':'New habit',left:'Cancel',right:h?'Save':'Add',rightA:'habit-save',body:'<div id="hb">'+habitBody()+'</div>'});
+  openSheet({title:h?'Edit habit':'New habit',left:'Close',right:'Done',rightA:'habit-save',body:'<div id="hb">'+habitBody()+'</div>'});
 }
 function habitBody(){
   var isNew=!draft.id,t=draft.type;
@@ -1486,7 +1526,7 @@ function workoutSheet(id){
   var w=id?W(id):null;
   var used=S.workouts.map(function(x){return x.c});
   wdraft=w?clone(w):{id:null,name:'',c:COLORS.filter(function(c){return used.indexOf(c)<0})[0]||COLORS[0],created:today()};
-  openSheet({title:w?'Edit workout':'New workout',left:'Cancel',right:w?'Save':'Add',rightA:'w-save',body:
+  openSheet({title:w?'Edit workout':'New workout',left:'Close',right:'Done',rightA:'w-save',body:
     '<div class="glabel">Workout</div><div class="group"><div class="grow"><input class="full" data-f="w-name" placeholder="e.g. Upper day" value="'+esc(wdraft.name)+'" maxlength="30"></div></div>'+
     '<div class="glabel">Color</div><div class="group">'+swatches(wdraft.c,'w-color','')+'</div>'+
     (w?'<div class="glabel">&nbsp;</div><div class="group"><button class="gbtn grow" data-a="w-archive">'+I.box+'Archive workout</button></div>'+
@@ -1499,7 +1539,7 @@ function swatches(cur,action,extra){
 
 /* legend colors sheet */
 var colorOpen=null;
-function colorsSheet(){colorOpen=null;openSheet({title:'Legend colors',left:'Done',body:'<div id="cb">'+colorsBody()+'</div>'})}
+function colorsSheet(){colorOpen=null;openSheet({title:'Legend colors',left:'Close',right:'Done',rightA:'sheet-close',body:'<div id="cb">'+colorsBody()+'</div>'})}
 function mvBtns(action,attr,i,len){
   return '<span class="mvb"><button data-a="'+action+'" '+attr+' data-dir="-1"'+(i===0?' disabled':'')+' aria-label="Move up">'+I.up+'</button>'+
     '<button data-a="'+action+'" '+attr+' data-dir="1"'+(i===len-1?' disabled':'')+' aria-label="Move down">'+I.down+'</button></span>';
@@ -1523,7 +1563,7 @@ function colorsBody(){
 }
 
 /* archived sheet */
-function archivedSheet(){openSheet({title:'Archived',left:'Done',body:'<div id="ab">'+archivedBody()+'</div>'})}
+function archivedSheet(){openSheet({title:'Archived',left:'Close',right:'Done',rightA:'sheet-close',body:'<div id="ab">'+archivedBody()+'</div>'})}
 function archivedBody(){
   var hs=S.habits.filter(function(h){return h.archived}),ws=S.workouts.filter(function(w){return w.archived});
   if(!hs.length&&!ws.length)return '<div class="empty"><b>Nothing archived</b>Archived habits and workouts keep their history and show up here.</div>';
@@ -1539,7 +1579,7 @@ function archivedBody(){
 
 /* mood check-in wheel */
 var moodK='m',moodDs=null;
-function moodSheet(k){moodK=k;moodDs=ui.sel;openSheet({title:'Mood',left:'Close',body:'<div id="mb">'+moodBody(true)+'</div>'})}
+function moodSheet(k){moodK=k;moodDs=ui.sel;openSheet({title:'Mood',left:'Close',right:'Done',rightA:'sheet-close',body:'<div id="mb">'+moodBody(true)+'</div>'})}
 function moodBody(anim){
   var x=DAY(moodDs)[moodK]||{},sel=x.v,f=x.f||[],R=104;
   var html='<div class="mq">'+'How are you feeling today?'+' · '+esc(dayLabel(moodDs))+'</div>';
@@ -1556,7 +1596,7 @@ function moodBody(anim){
 var noteDs=null;
 function noteSheet(){
   noteDs=ui.sel;
-  openSheet({title:'Note',left:'Cancel',right:'Save',rightA:'note-save',body:
+  openSheet({title:'Note',left:'Close',right:'Done',rightA:'note-save',body:
     '<div class="mq">'+esc(dayLabel(noteDs))+'</div><div class="group" style="margin-top:12px"><div class="grow"><textarea id="note-in" rows="5" maxlength="500" placeholder="How was your day? Anything worth remembering?">'+esc(DAY(noteDs).n||'')+'</textarea></div></div>',
     mount:function(){setTimeout(function(){var t=$('#note-in');if(t)t.focus()},350)}});
 }
@@ -1567,12 +1607,12 @@ function ansSheet(id){
   if(h.type==='number'){numSheet(id,ui.sel,false);return}
   ansH=id;ansDs=ui.sel;
   var multi=h.type==='multi';
-  openSheet({title:esc(h.name),left:'Close',right:multi?'Done':'',rightA:multi?'sheet-close':'',body:'<div id="ansb">'+ansBody()+'</div>'});
+  openSheet({title:esc(h.name),left:'Close',right:'Done',rightA:'sheet-close',body:'<div id="ansb">'+ansBody()+'</div>'});
 }
 function ansBody(){
   var h=H(ansH),v=val(ansDs,h),g=hasGoal(h),tiles=[];
   if(h.type==='check'){
-    tiles=[['1','Done',v===true,'on-g'],['0','Missed',v===false,'on-r'],['na','N/A',v==='na','on-n']].map(function(t){
+    tiles=[['1','Yes',v===true,'on-g'],['0','No',v===false,'on-r'],['na','N/A',v==='na','on-n']].map(function(t){
       return '<button class="at'+(t[2]?' '+t[3]:'')+'" data-a="ans-check" data-v="'+t[0]+'">'+t[1]+'</button>'});
   }else if(h.type==='single'){
     tiles=h.options.map(function(o){var on=v===o.id;
@@ -1595,7 +1635,7 @@ function ansBody(){
 function ansPicked(){render();var b=$('#ansb');if(b)b.innerHTML=ansBody();setTimeout(function(){if($('#ansb'))closeSheet()},220)}
 function numSheet(hid,ds,fromLog){
   numH=hid;numDs=ds;numFromLog=fromLog;var h=H(hid),v=val(ds,h);
-  openSheet({title:esc(h.name),left:'Cancel',right:'Save',rightA:'num-save',body:
+  openSheet({title:esc(h.name),left:'Close',right:'Done',rightA:'num-save',body:
     '<div class="mq">'+esc(dayLabel(ds))+(h.goal!=null?' · Goal '+esc(goalText(h)):'')+'</div>'+
     '<div class="group" style="margin-top:12px"><div class="grow"><input id="num-in" class="full" inputmode="decimal" placeholder="Amount" value="'+(typeof v==='number'?fmtNum(v):'')+'"><span class="rv" style="flex:none">'+esc(h.unit||'')+'</span></div></div>'+
     (typeof v==='number'?'<div class="glabel">&nbsp;</div><div class="group"><button class="gbtn red" data-a="num-clear">'+I.trash+'Clear this day</button></div>':''),
@@ -1603,7 +1643,7 @@ function numSheet(hid,ds,fromLog){
 }
 function afterNum(){if(numFromLog){var id=numH;logSheet(id);logOpen=numDs;refreshLog()}else closeSheet();render()}
 var fdraft=null;
-function feelSheet(){fdraft=clone(S.feel);openSheet({title:'Mood feelings',left:'Cancel',right:'Save',rightA:'feel-save',body:'<div id="fb">'+feelBody()+'</div>'})}
+function feelSheet(){fdraft=clone(S.feel);openSheet({title:'Mood feelings',left:'Close',right:'Done',rightA:'feel-save',body:'<div id="fb">'+feelBody()+'</div>'})}
 function feelBody(){
   return '<div class="ghint" style="margin:4px 16px 0">These show up when you fill in your morning and evening mood. Use the arrows to change the order.</div><div class="glabel">Feelings</div><div class="group">'+
     fdraft.map(function(fe,i){return '<div class="grow opt-row"><button class="odel" data-a="feel-del" data-i="'+i+'" aria-label="Remove">'+I.minus+'</button><input data-f="fe" data-i="'+i+'" value="'+esc(fe.label)+'" maxlength="20" placeholder="Feeling">'+mvBtns('feel-mv','data-i="'+i+'"',i,fdraft.length)+'</div>'}).join('')+
@@ -1613,13 +1653,13 @@ function feelBody(){
 /* focus picker: one mode (Overview / All workouts) or one or more items */
 var pickSel=[];
 function curSel(){var v=ui.view;if(v.indexOf('m:')===0)return v.slice(2).split(',');if(v.indexOf('h:')===0||v.indexOf('w:')===0)return [v];return []}
-function focusSheet(){pickSel=curSel();openSheet({title:'Show in calendar',left:'Cancel',right:'Show',rightA:'focus-apply',body:'<div id="fsb">'+focusBody()+'</div>'})}
+function focusSheet(){pickSel=curSel();openSheet({title:'Show in calendar',left:'Close',right:'Done',rightA:'focus-apply',body:'<div id="fsb">'+focusBody()+'</div>'})}
 function focusBody(){
   function mode(v,label,lead){return '<button class="gbtn plain grow" data-a="focus-set" data-v="'+v+'">'+lead+'<span class="gl">'+label+'</span>'+(ui.view===v&&!pickSel.length?'<span class="chk">'+I.check+'</span>':'')+'</button>'}
   function item(k,label,c){var on=pickSel.indexOf(k)>-1;return '<button class="gbtn plain grow" data-a="focus-tog" data-k="'+k+'"><span class="pdot" style="background:'+c+'"></span><span class="gl">'+label+'</span><span class="pick'+(on?' on':'')+'">'+I.check+'</span></button>'}
   var hs=shownHabits(),ws=activeWorkouts();
   var body='<div class="group">'+mode('all','Overview',I.grid)+mode('wall','All workouts',I.dumbbell)+mode('mood','Mood',I.smile)+'</div>'+
-    '<div class="ghint">Or tick one or more below to see them together, then tap Show.</div>';
+    '<div class="ghint">Or tick one or more below to see them together, then tap Done.</div>';
   if(hs.length)body+='<div class="glabel">Habits</div><div class="group">'+hs.map(function(h){return item('h:'+h.id,esc(h.name),h.c)}).join('')+'</div>';
   body+='<div class="glabel">Workouts</div><div class="group">'+ws.map(function(w){return item('w:'+w.id,esc(w.name),w.c)}).join('')+item('w:'+REST,'Rest day',restItem().c)+'</div>';
   return body;
@@ -1651,7 +1691,7 @@ function habitChanges(a,b){
 function daysBetween(a,b){return Math.round((parseD(b)-parseD(a))/864e5)}
 function answerText(h,v){
   var st=status(h,v);if(!st)return {t:'–',c:''};
-  if(h.type==='check')return st==='na'?{t:'N/A',c:''}:{t:st==='done'?'Done':'Missed',c:st==='done'?'g':'r'};
+  if(h.type==='check')return st==='na'?{t:'N/A',c:''}:{t:st==='done'?'Yes':'No',c:st==='done'?'g':'r'};
   if(h.type==='number')return {t:numText(h,v),c:st==='done'?'g':'o'};
   if(h.type==='single'){var o=optOf(h,v);return {t:o.label,c:st==='done'?'g':'o'}}
   var ls=v.map(function(id){var o=optOf(h,id);return o?o.label:null}).filter(Boolean);
@@ -1676,17 +1716,17 @@ function habitStats(h){
   s.top=top?optOf(h,top).label+' ('+s.cnt[top]+'×)':null;
   return s;
 }
-function logSheet(id){logH=id;logOpen=null;logLimit=30;openSheet({title:'Habit log',left:'Done',body:'<div id="lb">'+logBody()+'</div>'})}
+function logSheet(id){logH=id;logOpen=null;logLimit=30;openSheet({title:'Habit log',left:'Close',right:'Done',rightA:'sheet-close',body:'<div id="lb">'+logBody()+'</div>'})}
 function refreshLog(){var b=$('#lb');if(b&&logH)b.innerHTML=logBody()}
 function afterLog(){render();refreshLog()}
 function logBody(){
   var h=H(logH);if(!h)return '<div class="empty"><b>Habit not found</b></div>';
   var t=today(),s=habitStats(h),run=daysBetween(h.created,t)+1,p=activePause(h);
   var hasG=(h.type==='single'&&hasGoal(h))||(h.type==='number'&&h.goal!=null);
-  var missLabel=h.type==='single'&&hasGoal(h)?'Other answer':h.type==='multi'?'None':h.type==='number'?'Not on goal':'Missed';
+  var missLabel=h.type==='single'&&hasGoal(h)?'Other answer':h.type==='multi'?'None':h.type==='number'?'Not on goal':'No';
   var html='<div class="lhead"><div class="lname">'+esc(h.name)+'</div><div class="lsub">'+TYPE_LABEL[h.type]+' · '+daysText(h.days)+(p?' · Paused':'')+(h.hidden?' · Hidden':'')+(h.archived?' · Archived':'')+'</div></div>';
   html+='<div class="ltiles">'+tile(run<1?'–':run,run===1?'Day running':'Days running')+tile(s.rate,'Success rate','g')+tile(streak(h),'Current streak')+
-    tile(s.done,hasG?'On goal':h.type==='number'?'Logged':'Done','g')+tile(s.miss,missLabel,(h.type==='single'||h.type==='number')?'o':'r')+tile(s.none,'Not filled in')+'</div>';
+    tile(s.done,hasG?'On goal':h.type==='number'?'Logged':h.type==='check'?'Yes':'Done','g')+tile(s.miss,missLabel,(h.type==='single'||h.type==='number')?'o':'r')+tile(s.none,'Not filled in')+'</div>';
   html+='<div class="glabel">Details</div><div class="group">'+
     '<div class="grow"><label>Started</label><input type="date" data-f="l-start" value="'+h.created+'" max="'+t+'"></div>'+
     '<div class="grow"><label>Best streak</label><span class="rv">'+s.best+(s.best===1?' day':' days')+'</span></div>'+
@@ -1769,7 +1809,7 @@ function paintSync(){if(ui.tab==='settings'&&!$('.ov'))render()}
 var sdraft=null;
 function syncSheet(){
   sdraft={url:SY.url||DEFAULT_URL,key:SY.key||'',email:SY.email||'',pw:''};
-  openSheet({title:'Cloud sync',left:'Cancel',right:'Sign in',rightA:'sync-signin',body:
+  openSheet({title:'Cloud sync',left:'Close',right:'Sign in',rightA:'sync-signin',body:
     '<div class="ghint" style="margin:4px 16px 0">Use the details from your Supabase project and the user you created there.</div>'+
     '<div class="glabel">Supabase project</div><div class="group">'+
       '<div class="grow"><input class="full" data-f="s-url" placeholder="https://xxxx.supabase.co" value="'+esc(sdraft.url)+'" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url"></div>'+
@@ -1842,6 +1882,16 @@ var A={
   },
   'log-none':function(d){var ds=d.d||ui.sel,h=H(d.h),cur=val(ds,h);setLog(ds,h,(Array.isArray(cur)&&cur.length===0)?undefined:[]);afterLog()},
   'h-log':function(d){logSheet(d.id)},
+  'mood-step':function(d){var st=d.s||null;ui.moodStep=ui.moodStep===st?null:st;render()},
+  'mood-tap':function(d){
+    var v=+d.v,cleared=false;
+    setDay(ui.sel,function(x){var e=x.m||{f:[]};if(!e.f)e.f=[];if(e.v===v){delete e.v;cleared=true}else e.v=v;x.m=e});
+    ui.moodStep=cleared||!S.feel.length?null:(ui.moodStep==='edit'?'edit':'feel');render();
+  },
+  'mood-fq':function(d){
+    setDay(ui.sel,function(x){var e=x.m||{f:[]};if(!e.f)e.f=[];var i=e.f.indexOf(d.id);if(i>-1)e.f.splice(i,1);else e.f.push(d.id);x.m=e});
+    ui.moodStep=null;render();
+  },
   'theme':function(d){ui.theme=d.t;saveUI();applyTheme();render()},
   'bw-toggle':function(){ui.bw=!ui.bw;saveUI();applyTheme();render()},
   'mood-open':function(d){moodSheet(d.k)},
