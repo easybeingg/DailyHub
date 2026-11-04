@@ -353,6 +353,12 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 .sdot.o{background:var(--orange);border-color:var(--orange)}
 .sdot.r{background:var(--red);border-color:var(--red)}
 .sdot.n{background:var(--gray);border-color:var(--gray)}
+.sdot.hy{background:var(--hc);border-color:var(--hc)}
+.sdot.hn{background:color-mix(in srgb,var(--hc) 30%,transparent);border-color:transparent;color:var(--hc)}
+.hans.hy,.lg-v.hy{color:var(--hc)} .hans.hn,.lg-v.hn{color:var(--label2)}
+.chip.on-hy,.at.on-hy{background:var(--hc);color:var(--onc)}
+.chip.on-hn,.at.on-hn{background:color-mix(in srgb,var(--hc) 30%,var(--card));color:var(--label)}
+.num.tint-c{color:var(--label)!important;font-weight:600}
 /* answer pop-up */
 .atiles{display:grid;gap:10px;margin-top:16px}
 .at{min-height:54px;padding:8px 10px;border-radius:14px;background:var(--row);font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-variant-numeric:tabular-nums}
@@ -366,7 +372,46 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 .at.on-c .dot{background:#fff!important;opacity:.85}
 .at.on-g .star,.at.on-o .star{color:var(--onc)}
 /* mood card */
-.mood{padding:12px 12px 2px;margin-bottom:12px}
+.mood{padding:14px 12px 2px}
+.mood-h{display:flex;align-items:center;gap:6px;color:#ff375f;font-weight:600;font-size:15px;margin:0 4px 10px}
+.mood-h svg{width:18px;height:18px;flex:none}
+.mood-h span{margin-left:auto;color:var(--label3);font-weight:500;font-size:13px}
+.mfaces.col .mf{color:var(--c)}
+.mfaces.col .mf span{color:var(--label2)}
+.mfaces.col .mf.on{background:color-mix(in srgb,var(--c) 18%,transparent);box-shadow:inset 0 0 0 2px var(--c)}
+.mfaces.col .mf.on span{color:var(--c)}
+.mfl{font-size:13px;font-weight:600;color:var(--label2);margin:12px 4px 0}
+.mood .fbar{padding:8px 2px 2px}
+.sh2{display:flex;align-items:baseline;gap:8px;margin:26px 6px 8px}
+.sh2 b{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.sh2 .shd{font-size:14px;color:var(--label2);font-weight:500}
+.sh2 .txt{margin-left:auto;padding:0}
+.wline{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:10px 14px 10px 16px;position:relative;text-align:left}
+.wline+.wline::before{content:"";position:absolute;top:0;left:58px;right:0;border-top:.5px solid var(--sep)}
+.wline .wname{flex:1;min-width:0;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.wico svg{width:18px;height:18px}
+.ck2{width:26px;height:26px;border-radius:50%;border:2px solid var(--label3);display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.ck2 svg{width:14px;height:14px;stroke-width:3;opacity:0}
+.ck2.on{background:var(--green);border-color:var(--green)}
+.ck2.on svg{opacity:1}
+.prof2{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.prof2 .avatar{width:52px;height:52px;font-size:21px}
+.prof2 .pt2{flex:1;min-width:0}
+.prof2 b{display:block;font-size:19px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prof2 span{font-size:14px;color:var(--label2)}
+.prof2 .txt{flex:none}
+.wgc{padding:14px 12px}
+.wg{display:grid;grid-template-columns:66px repeat(7,1fr);row-gap:10px;align-items:center;text-align:center}
+.wg .h{font-size:12px;font-weight:600;color:var(--label2)}
+.wg .h.t{color:var(--accent)}
+.wg .r{text-align:left;font-size:13px;font-weight:600;color:var(--label2);padding-left:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wg .c{display:flex;justify-content:center;align-items:center;height:24px}
+.wg .dot{width:22px;height:22px;border-radius:7px;background:var(--fill2)}
+.wg .dot.f{background:transparent;box-shadow:inset 0 0 0 1px var(--fill)}
+.wg .c svg{width:22px;height:22px}
+.wgd{display:contents}
+.lflag{font-size:22px;line-height:1}
 .mhead{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 10px}
 .mhead b{font-size:13px;font-weight:600;color:var(--label2);text-transform:uppercase;letter-spacing:.02em}
 .mhead span{font-size:13px;color:var(--label3);font-weight:500}
@@ -480,14 +525,17 @@ input::placeholder,textarea::placeholder{color:var(--label3)}
 <script>
 (function(){
 'use strict';
-var VERSION='2.8';
+var VERSION='3.2';
 var KEY='hh_data_v1', UIKEY='hh_ui_v1', SKEY='hh_sync_v1';
 var DEFAULT_URL='https://arqdaubaruecjwzgcuhe.supabase.co';
 var TABLE='habithub_data';
 var COLORS=['#007aff','#34c759','#ff9500','#ff2d55','#af52de','#5ac8fa','#5856d6','#ffcc00','#ff3b30','#a2845e'];
 var REST='rest';
 var ALLDAYS=[0,1,2,3,4,5,6];
-var DAYL=['M','T','W','T','F','S','S'];
+var LANG='en';try{var _u=JSON.parse(localStorage.getItem('hh_ui_v1')||'{}');if(_u.lang==='nl'||_u.lang==='es')LANG=_u.lang}catch(e){}
+var LOC={en:'en-GB',nl:'nl-NL',es:'es-ES'}[LANG];
+document.documentElement.lang=LANG;
+var DAYL={en:['M','T','W','T','F','S','S'],nl:['M','D','W','D','V','Z','Z'],es:['L','M','X','J','V','S','D']}[LANG];
 
 /* ---------- helpers ---------- */
 function $(s,r){return (r||document).querySelector(s)}
@@ -502,11 +550,12 @@ function dow(ds){return (parseD(ds).getDay()+6)%7}
 function uid(){return Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4)}
 function clone(o){return JSON.parse(JSON.stringify(o))}
 function isObj(x){return !!x&&typeof x==='object'&&!Array.isArray(x)}
-function monthName(d){return d.toLocaleDateString('en-GB',{month:'long'})}
-function monthShort(d){return d.toLocaleDateString('en-GB',{month:'short'}).replace('.','')}
-function weekday(d){return d.toLocaleDateString('en-GB',{weekday:'long'})}
+function cap1(x){return x.charAt(0).toUpperCase()+x.slice(1)}
+function monthName(d){return cap1(d.toLocaleDateString(LOC,{month:'long'}))}
+function monthShort(d){return d.toLocaleDateString(LOC,{month:'short'}).replace('.','')}
+function weekday(d){return cap1(d.toLocaleDateString(LOC,{weekday:'long'}))}
 function niceDate(ds){var d=parseD(ds);return d.getDate()+' '+monthShort(d)+(d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():'')}
-var MONTHS=[];for(var mi=0;mi<12;mi++)MONTHS.push(new Date(2000,mi,1).toLocaleDateString('en-GB',{month:'long'}));
+var MONTHS=[];for(var mi=0;mi<12;mi++)MONTHS.push(cap1(new Date(2000,mi,1).toLocaleDateString(LOC,{month:'long'})));
 function svg(inner,extra){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"'+(extra||'')+'>'+inner+'</svg>'}
 var I={
   chevL:svg('<path d="M15 18l-6-6 6-6"/>',' stroke-width="2.4"'),
@@ -544,6 +593,8 @@ var I={
   smile:svg('<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c.9 1.2 2.1 1.8 3.5 1.8s2.6-.6 3.5-1.8"/><circle cx="9" cy="10" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.1" fill="currentColor" stroke="none"/>'),
   note:svg('<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8.5 12.5h7M8.5 16h5"/>'),
   minusLine:svg('<path d="M7 12h10"/>'),
+  heart:svg('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0112 7.6 4.3 4.3 0 0119.5 10c0 5.4-7.5 10-7.5 10z" fill="currentColor" stroke="none"/>'),
+  grid4:svg('<rect x="4" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.8"/>'),
   list:svg('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>')
 };
 
@@ -562,7 +613,21 @@ var FACE={
   1:'<path d="M7.8 9.4l2.6-1.2M16.2 9.4l-2.6-1.2"/><circle cx="9.4" cy="11" r=".9" fill="currentColor" stroke="none"/><circle cx="14.6" cy="11" r=".9" fill="currentColor" stroke="none"/><path d="M8.6 17q3.4-3.4 6.8 0"/>'
 };
 function faceSvg(v){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.6"/>'+FACE[v]+'</svg>'}
-function defaultFeel(){return [['f1','Energetic'],['f2','Rested'],['f3','Tired'],['f4','Stressed'],['f5','Calm'],['f6','Sick']].map(function(x){return {id:x[0],label:x[1]}})}
+var FEEL_NEW=[['f7','Happy'],['f5','Calm'],['f1','Energetic'],['f2','Rested'],['f3','Tired'],['f4','Stressed'],['f8','Anxious'],['f9','Sad'],['f10','Irritated'],['f6','Sick']];
+function defaultFeel(){return FEEL_NEW.map(function(x){return {id:x[0],label:x[1]}})}
+var FEEL2=Date.UTC(2026,10,4);
+function upgradeFeel(d){
+  if((d.feelU||0)>=FEEL2)return;
+  var low=function(x){return String(x).trim().toLowerCase()},have=d.feel.map(function(f){return low(f.label)});
+  if(['happy','anxious','sad','irritated'].some(function(l){return have.indexOf(l)>-1}))return;
+  var oldDef=['energetic','rested','tired','stressed','calm','sick'];
+  if(have.length===6&&oldDef.every(function(l,i){return have[i]===l})&&d.feel.every(function(f,i){return f.id==='f'+(i+1)}))d.feel=defaultFeel();
+  else{
+    var ids=d.feel.map(function(f){return f.id});
+    FEEL_NEW.forEach(function(x){if(have.indexOf(low(x[1]))<0)d.feel.push({id:ids.indexOf(x[0])<0?x[0]:x[0]+'b',label:x[1]})});
+  }
+  d.feelU=FEEL2;
+}
 function seed(){
   return {v:3,pristine:true,profile:emptyProfile(),
     habits:[
@@ -619,6 +684,7 @@ function norm(d){
   });
   if(!Array.isArray(d.feel))d.feel=defaultFeel();
   if(typeof d.feelU!=='number')d.feelU=0;
+  upgradeFeel(d);
   if(!d.restC)d.restC='#8e8e93';
   if(typeof d.restU!=='number')d.restU=0;
   d.pristine=d.pristine===true;
@@ -689,7 +755,7 @@ var ui={tab:'home',month:new Date(now.getFullYear(),now.getMonth(),1),sel:today(
 ui.theme='auto';ui.bw=false;
 try{var su=JSON.parse(localStorage.getItem(UIKEY)||'{}');if(su.sec==='workouts')ui.sec='workouts';ui.collapsed=!!su.collapsed;
   if(su.theme==='light'||su.theme==='dark')ui.theme=su.theme;ui.bw=su.bw===true}catch(e){}
-function saveUI(){try{localStorage.setItem(UIKEY,JSON.stringify({sec:ui.sec,collapsed:ui.collapsed,theme:ui.theme,bw:ui.bw}))}catch(e){}}
+function saveUI(){try{localStorage.setItem(UIKEY,JSON.stringify({sec:ui.sec,collapsed:ui.collapsed,theme:ui.theme,bw:ui.bw,lang:LANG}))}catch(e){}}
 function applyTheme(){
   var r=document.documentElement;
   if(ui.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',ui.theme);
@@ -749,9 +815,21 @@ function setDay(ds,fn){
 }
 function feelOf(id){for(var i=0;i<S.feel.length;i++)if(S.feel[i].id===id)return S.feel[i];return null}
 function dayMood(ds){var d=DAY(ds),vs=[d.m&&d.m.v,d.e&&d.e.v].filter(Boolean);if(!vs.length)return null;return vs.reduce(function(a,b){return a+b},0)/vs.length}
-function dayLabel(ds){return ds===today()?'Today':parseD(ds).toLocaleDateString('en-GB',{weekday:'long'})+' '+niceDate(ds)}
+function dayLabel(ds){return ds===today()?'Today':cap1(parseD(ds).toLocaleDateString(LOC,{weekday:'long'}))+' '+niceDate(ds)}
 function tintStyle(h){return h.bg?' style="background:color-mix(in srgb,'+h.bg+' var(--tintp),var(--card))"':''}
+function ynRun(h){
+  var ds=today(),last=null,n=0;
+  for(var i=0;i<3660&&ds>=h.created;i++,ds=addDays(ds,-1)){
+    var st=status(h,val(ds,h));
+    if(st==='done'||st==='miss'){if(last===null)last=st;if(st!==last)break;n++}
+    else if(st==='na'||!applies(h,ds))continue;
+    else if(ds===today())continue;
+    else break;
+  }
+  return {n:n,l:last==='miss'?'No in a row':'Yes in a row'};
+}
 function streak(h){
+  if(h.type==='check')return ynRun(h).n;
   var ds=today(),st=status(h,val(ds,h));
   if(st==='miss')return 0;
   if(st!=='done')ds=addDays(ds,-1);
@@ -858,38 +936,25 @@ window.addEventListener('scroll',function(){
 },{passive:true});
 function tabbar(){
   function t(k,ic,l){return '<button class="tab'+(ui.tab===k?' on':'')+'" data-a="tab" data-t="'+k+'" aria-label="'+l+'">'+ic+'<span class="tl2">'+l+'</span></button>'}
-  return '<nav class="tabbar'+(miniTab?' mini':'')+'"><div class="in">'+t('home',I.home,'Home')+t('profile',I.person,'Profile')+t('settings',I.sliders,'Settings')+'</div></nav>';
+  return '<nav class="tabbar'+(miniTab?' mini':'')+'"><div class="in">'+t('home',I.home,'Home')+t('profile',I.grid4,'Summary')+t('settings',I.sliders,'Settings')+'</div></nav>';
 }
 function dateEyebrow(){var t=new Date();return '<div class="eyebrow">'+esc(weekday(t)+' '+t.getDate()+' '+monthName(t))+'</div>'}
 function renderHome(){
-  var h=new Date().getHours(),g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
-  var first=(S.profile.name||'').trim().split(/\s+/)[0];
-  return dateEyebrow()+'<h1 class="big">'+g+(first?', '+esc(first):'')+'</h1>'+renderMoodCard()+renderCalendar()+
-    '<div class="switch"><button class="'+(ui.sec==='habits'?'on':'')+'" data-a="sec" data-s="habits">Habits</button>'+
-    '<button class="'+(ui.sec==='workouts'?'on':'')+'" data-a="sec" data-s="workouts">Workouts</button></div>'+
-    (ui.sec==='habits'?renderHabitsDay():renderWorkoutsDay());
+  return dateEyebrow()+'<h1 class="big">Today</h1>'+renderCalendar()+secHead('Mood','m',false)+renderMoodCard()+renderHabitsDay()+renderWorkoutsDay();
+}
+function secHead(title,k,show){
+  var ds=ui.sel,on=k==='w'?ui.wedit:ui.edit;
+  return '<div class="sh2"><b>'+title+'</b>'+(ds===today()?'':'<span class="shd">'+esc(dayLabel(ds))+'</span>')+
+    (show?'<button class="txt" data-a="edit-toggle" data-s="'+k+'">'+(on?'Done':'Edit')+'</button>':'')+'</div>';
 }
 function renderMoodCard(){
-  var ds=ui.sel,d=DAY(ds),x=d.m||{},v=x.v,fl=(x.f||[]).map(feelOf).filter(Boolean);
-  if(ui.moodDay!==ds){ui.moodDay=ds;ui.moodStep=null}
-  var step=ui.moodStep,body;
-  var tags=fl.map(function(f){return '<button class="mtag" data-a="mood-step" data-s="edit">'+esc(f.label)+'</button>'}).join('')+
-    '<button class="mtag plus" data-a="mood-step" data-s="edit">Edit</button>';
-  var chosen='<div class="mrow">'+(v?'<button class="mpick" data-a="mood-step" data-s="face" style="color:'+MOODS[v].c+'">'+faceSvg(v)+'<span class="mlab">'+MOODS[v].l+'</span></button>'
-      :'<button class="mpick" data-a="mood-step" data-s="face"><span class="mface0">'+faceSvg(3)+'</span><span class="mlab ph">Mood</span></button>')+
-    '<div class="mtags">'+tags+'</div></div>';
-  var faces='<div class="mfaces">'+MOODS.slice(1).reverse().map(function(md){
-      return '<button class="mf'+(v===md.v?' on':'')+'" style="--c:'+md.c+'" data-a="mood-tap" data-v="'+md.v+'">'+faceSvg(md.v)+'<span>'+md.l+'</span></button>';
-    }).join('')+'</div>';
-  var on=x.f||[];
-  var fbar=S.feel.length?'<div class="fbar">'+S.feel.map(function(f){
-      return '<button class="chip'+(on.indexOf(f.id)>-1?' on-a':'')+'" data-a="mood-fq" data-id="'+f.id+'">'+esc(f.label)+'</button>'}).join('')+
-      '<button class="chip ghost" data-a="mood-step" data-s="">'+(step==='edit'?'Close':'Skip')+'</button></div>':'';
-  if(step==='feel')body=chosen+fbar;
-  else if(step==='edit')body=faces+fbar;
-  else if(step==='face'||!(v||fl.length))body=faces;
-  else body=chosen;
-  return '<section class="card mood"><div class="mhead"><b>How are you?</b><span>'+esc(dayLabel(ds))+'</span></div>'+body+
+  var ds=ui.sel,d=DAY(ds),x=d.m||{},v=x.v,on=x.f||[];
+  var faces='<div class="mfaces col">'+MOODS.slice(1).reverse().map(function(md){
+    return '<button class="mf'+(v===md.v?' on':'')+'" style="--c:'+md.c+'" data-a="mood-tap" data-v="'+md.v+'">'+faceSvg(md.v)+'<span>'+md.l+'</span></button>';
+  }).join('')+'</div>';
+  var feel=(v||on.length)&&S.feel.length?'<div class="mfl">How do you feel?</div><div class="fbar">'+S.feel.map(function(f){
+    return '<button class="chip'+(on.indexOf(f.id)>-1?' on-a':'')+'" data-a="mood-fq" data-id="'+f.id+'">'+esc(f.label)+'</button>'}).join('')+'</div>':'';
+  return '<section class="card mood">'+faces+feel+
     '<button class="mnote" data-a="note-open">'+I.note+(d.n?'<span class="tx">'+esc(d.n)+'</span>':'<span class="tx ph">Add a note for this day</span>')+'</button></section>';
 }
 function calDates(){
@@ -951,7 +1016,7 @@ function dayCell(date,v){
       if(wraw(ds).indexOf(v.x.id)>-1){c.cls='full-c';c.style='background:'+v.x.c}
     }else{
       var h=v.x,val0=val(ds,h),st=status(h,val0);
-      if(h.type==='check'){if(st==='done')c.cls='full-g';else if(st==='miss')c.cls='full-r';else if(st==='na')c.cls='tint-n'}
+      if(h.type==='check'){if(st==='done'){c.cls='full-c';c.style='background:'+h.c;c.under='<span class="ul" style="color:'+h.c+'">Yes</span>'}else if(st==='miss'){c.cls='tint-c';c.style='background:color-mix(in srgb,'+h.c+' 30%,transparent)';c.under='<span class="ul n">No</span>'}else if(st==='na'){c.cls='tint-n';c.under='<span class="ul n">N/A</span>'}}
       else if(h.type==='number'){if(st){c.cls=st==='done'?'tint-g':'tint-o';c.under='<span class="ul '+(st==='done'?'g':'o')+'">'+esc(fmtNum(val0))+'</span>'}}
       else if(h.type==='single'){
         if(st){var o=optOf(h,val0);c.cls=st==='done'?'tint-g':'tint-o';c.under='<span class="ul '+(st==='done'?'g':'o')+'">'+esc(o.label)+'</span>'}
@@ -975,7 +1040,7 @@ function legend(v){
     return ws.length?'<div class="legend">'+ws.map(function(w){return li(w.c,esc(w.name))}).join('')+'</div>':'';
   }
   var h=v.x;
-  if(h.type==='check')return '<div class="legend">'+li('var(--green)','Yes')+li('var(--red)','No')+li('var(--gray)','N/A')+'</div>';
+  if(h.type==='check')return '<div class="legend">'+li(h.c,'Yes')+li('color-mix(in srgb,'+h.c+' 30%,transparent)','No')+li('var(--gray)','N/A')+'</div>';
   if(h.type==='number')return h.goal!=null?'<div class="legend">'+li('var(--green)','On goal')+li('var(--orange)','Not on goal')+'</div>':'';
   if(h.type==='single')return hasGoal(h)?'<div class="legend">'+li('var(--green)','On goal')+li('var(--orange)','Other answer')+'</div>':'';
   return '<div class="legend">'+h.options.map(function(o){return li(o.c,esc(o.label))}).join('')+li('var(--red)','None')+'</div>';
@@ -1045,7 +1110,7 @@ function summary(v){
     if(h.type==='multi'&&Array.isArray(vv))vv.forEach(function(id){cnt[id]=(cnt[id]||0)+1});
   });
   var sk=streak(h),head='<div class="sum"><div class="sum-h">'+esc(h.name)+' in '+mn+'</div>';
-  if(h.type==='check')return head+'<div class="tiles">'+tile(done,'Yes','g')+tile(miss,'No','r')+tile(sk,'Day streak')+'</div></div>';
+  if(h.type==='check'){var yr=ynRun(h);return head+'<div class="tiles">'+tile(done,'Yes')+tile(miss,'No')+tile(yr.n||'\u2013',yr.n?yr.l:'In a row')+'</div></div>'}
   if(h.type==='number'){
     var nn=0,sum=0;days.forEach(function(ds){var vv=val(ds,h);if(typeof vv==='number'){nn++;sum+=vv}});
     var avg=nn?fmtNum(sum/nn):'\u2013',u=h.unit?' ('+esc(h.unit)+')':'';
@@ -1086,7 +1151,7 @@ function editBtns(kind,id,i,len){
     '<button class="p" data-a="'+kind+'-edit" data-id="'+id+'" aria-label="Edit">'+I.pencil+'</button></div>';
 }
 function renderHabitsDay(){
-  var ds=ui.sel,act=activeHabits(),head=dayHead(act.length>0);
+  var ds=ui.sel,act=activeHabits(),head=secHead('Habits','h',act.length>0);
   if(!act.length){
     return head+'<div class="card empty"><b>No habits yet</b>Create your first habit to start tracking.</div>'+
       '<button class="add" data-a="habit-new">'+I.plus+'New habit</button>';
@@ -1105,9 +1170,7 @@ function renderHabitsDay(){
   var n=list.length,a=n?done/n*100:0,b=n?miss/n*100:0,cn=n?na/n*100:0;
   var html=head;
   if(n){
-    html+='<div class="prog"><div class="pt"><b style="width:'+a+'%;background:var(--green)"></b><b style="width:'+b+'%;background:var(--red)"></b><b style="width:'+cn+'%;background:var(--gray)"></b></div>'+
-      '<div class="pn">'+(done+miss+na)+' of '+n+' filled in</div></div>'+
-      '<div class="card hlist">'+list.map(function(h){return habitLine(h,ds)}).join('')+'</div>';
+    html+=      '<div class="card hlist">'+list.map(function(h){return habitLine(h,ds)}).join('')+'</div>';
   }else html+='<div class="card empty"><b>Nothing scheduled</b>No habits apply to this day.</div>';
   var off=act.filter(function(h){return !h.hidden&&list.indexOf(h)<0&&!activePause(h)&&ds>=h.created});
   if(off.length)html+='<div class="note">Not scheduled this day: '+off.map(function(h){return esc(h.name)}).join(', ')+'</div>';
@@ -1132,17 +1195,19 @@ function daysText(days){
 }
 function habitLine(h,ds){
   var v=val(ds,h),st=status(h,v),a=answerText(h,v),cls='',ic='';
-  if(st==='done'){cls='g';ic=I.check}
+  if(h.type==='check'&&(st==='done'||st==='miss')){cls=st==='done'?'hy':'hn';ic=I.check}
+  else if(st==='done'){cls='g';ic=I.check}
   else if(st==='miss'){cls=(h.type==='single'||h.type==='number')?'o':'r';ic=(h.type==='single'||h.type==='number')?I.check:I.x}
   else if(st==='na'){cls='n';ic=I.minusLine}
   var bg=h.bg?' style="background:color-mix(in srgb,'+h.bg+' var(--tintp),var(--card))"':'';
+  bg=bg?bg.replace('style="','style="--hc:'+h.c+';'):' style="--hc:'+h.c+'"';
   return '<button class="hline"'+bg+' data-a="ans-open" data-id="'+h.id+'"><span class="sdot '+cls+'">'+ic+'</span>'+
     '<span class="hname">'+esc(h.name)+'</span><span class="hans '+(st==='na'?'n':a.c)+'">'+(st?esc(a.t):'\u2013')+'</span>'+I.chevR+'</button>';
 }
 function habitRow(h,ds){
   var v=val(ds,h),st=status(h,v),sub,sc='';
   if(!st)sub='Not filled in';
-  else if(h.type==='check'){sub=st==='done'?'Yes':st==='na'?'N/A':'No';sc=st==='done'?'g':st==='na'?'':'r'}
+  else if(h.type==='check'){sub=st==='done'?'Yes':st==='na'?'N/A':'No';sc=''}
   else if(h.type==='number'){sub=esc(numText(h,v))+(h.goal!=null?(st==='done'?' \u00b7 On goal':' \u00b7 Not on goal'):'');sc=st==='done'?'g':'o'}
   else if(h.type==='single'){var o=optOf(h,v);sub=esc(o.label)+(hasGoal(h)?(st==='done'?' · On goal':' · Not on goal'):'');sc=st==='done'?'g':'o'}
   else{
@@ -1158,8 +1223,8 @@ function habitRow(h,ds){
 function controls(h,v,ds){
   var id=' data-h="'+h.id+'"'+(ds?' data-d="'+ds+'"':'');
   if(h.type==='check'){
-    return '<div class="chips"><button class="chip'+(v===true?' on-g':'')+'" data-a="log-check"'+id+' data-v="1">Yes</button>'+
-      '<button class="chip'+(v===false?' on-r':'')+'" data-a="log-check"'+id+' data-v="0">No</button>'+
+    return '<div class="chips" style="--hc:'+h.c+'"><button class="chip'+(v===true?' on-hy':'')+'" data-a="log-check"'+id+' data-v="1">Yes</button>'+
+      '<button class="chip'+(v===false?' on-hn':'')+'" data-a="log-check"'+id+' data-v="0">No</button>'+
       '<button class="chip'+(v==='na'?' on-n':'')+'" data-a="log-check"'+id+' data-v="na">N/A</button></div>';
   }
   if(h.type==='number'){
@@ -1181,32 +1246,26 @@ function controls(h,v,ds){
   }).join('')+'<button class="chip ghost'+(Array.isArray(v)&&v.length===0?' on-r':'')+'" data-a="log-none"'+id+'>None</button></div>';
 }
 function renderWorkoutsDay(){
-  var ds=ui.sel,act=activeWorkouts(),head=dayHead(act.length>0);
+  var ds=ui.sel,act=activeWorkouts(),head=secHead('Workouts','w',act.length>0);
   if(!act.length){
     return head+'<div class="card empty"><b>No workouts yet</b>Add the workouts you do, like Push day or Running.</div>'+
       '<button class="add" data-a="w-new">'+I.plus+'New workout</button>';
   }
-  if(ui.edit){
+  if(ui.wedit){
     return head+'<div class="card wlist">'+act.map(function(w,i){
       return '<div class="wrow"><div class="wmain"><span class="wchk" style="border-color:'+w.c+'"></span><span class="wname">'+esc(w.name)+'</span></div>'+editBtns('w',w.id,i,act.length)+'</div>';
     }).join('')+'</div><button class="add" data-a="w-new">'+I.plus+'New workout</button>';
   }
-  var raw=wraw(ds),done=wdone(ds),rest=isRest(ds);
+  var raw=wraw(ds),rest=isRest(ds),rc=restItem().c;
   var shown=S.workouts.filter(function(w){return !w.archived||raw.indexOf(w.id)>-1});
-  var bar='<div class="wbar">'+(done.length
-    ?done.map(function(w){return '<span class="wtag"><i style="background:'+w.c+'"></i>'+esc(w.name)+'</span>'}).join('')
-    :rest?'<span class="wtag"><i style="background:'+restItem().c+'"></i>Rest day</span>':'Nothing filled in — tap what you did')+'</div>';
   var rows=shown.map(function(w){
     var on=raw.indexOf(w.id)>-1;
-    return '<div class="wrow"><button class="wmain" data-a="w-toggle" data-id="'+w.id+'">'+
-      '<span class="wchk'+(on?' on':'')+'" style="'+(on?'background:'+w.c:'border-color:'+w.c)+'">'+I.check+'</span>'+
-      '<span class="wname">'+esc(w.name)+'</span></button>'+
-      (w.archived?'':'<button class="fbtn'+(ui.view==='w:'+w.id?' on':'')+'" data-a="focus" data-v="w:'+w.id+'" aria-label="Show in calendar">'+I.cal+'</button>')+'</div>';
+    return '<button class="wline" data-a="w-toggle" data-id="'+w.id+'"><span class="wico" style="background:'+w.c+'">'+I.dumbbell+'</span>'+
+      '<span class="wname">'+esc(w.name)+'</span><span class="ck2'+(on?' on':'')+'">'+I.check+'</span></button>';
   }).join('');
-  var rc=restItem().c;
-  var restRow='<div class="wrow"><button class="wmain" data-a="w-rest"><span class="wchk'+(rest?' on':'')+'" style="'+(rest?'background:'+rc:'border-color:'+rc)+'">'+I.check+'</span>'+
-    '<span class="wname">Rest day</span></button><button class="fbtn'+(ui.view==='w:'+REST?' on':'')+'" data-a="focus" data-v="w:'+REST+'" aria-label="Show in calendar">'+I.cal+'</button></div>';
-  return head+bar+'<div class="card wlist">'+rows+restRow+'</div>'+
+  var restRow='<button class="wline" data-a="w-rest"><span class="wico" style="background:'+rc+'">'+I.moon+'</span>'+
+    '<span class="wname">Rest day</span><span class="ck2'+(rest?' on':'')+'">'+I.check+'</span></button>';
+  return head+'<div class="card hlist">'+rows+restRow+'</div>'+
     '<button class="add" data-a="w-new">'+I.plus+'New workout</button>';
 }
 
@@ -1230,7 +1289,7 @@ function yCell(ds,mode){
       if(h.hidden)return;
       var st=status(h,val(ds,h));
       if(st==='na')return;
-      if(st||applies(h,ds)){con++;if(st){lg++;if(st==='done')dn2++}}
+      if(st||applies(h,ds)){con++;if(st){lg++;if(st==='done'||(h.type==='check'&&st==='miss'))dn2++}}
     });
     if(!con||!lg)return '';
     if(dn2===con)return ' class="d"';
@@ -1260,16 +1319,34 @@ function yLegend(mode){
   if(mode==='habits')return '<div class="legend" style="padding-top:14px">'+li('var(--green)','All done')+li('var(--orange)','Some done')+li('var(--red)','None done')+'</div>';
   return '<div class="legend" style="padding-top:14px">'+li('var(--green)','Done')+li('var(--orange)','Incomplete')+'</div>';
 }
+function weekGrid(){
+  var t=today(),st=addDays(t,-dow(t)),days=[];for(var i=0;i<7;i++)days.push(addDays(st,i));
+  var html='<div class="wg"><div></div>'+days.map(function(ds,i){return '<div class="h'+(ds===t?' t':'')+'">'+DAYL[i]+'</div>'}).join('');
+  html+='<div class="r">Mood</div>'+days.map(function(ds){
+    if(ds>t)return '<div class="c"><i class="dot f"></i></div>';
+    var mv=dayMood(ds);if(!mv)return '<button class="c" data-a="wg-day" data-d="'+ds+'"><i class="dot"></i></button>';
+    var m=MOODS[Math.round(mv)];return '<button class="c" data-a="wg-day" data-d="'+ds+'" style="color:'+m.c+'">'+faceSvg(m.v)+'</button>';
+  }).join('');
+  html+='<div class="r">Habits</div>'+days.map(function(ds){
+    if(ds>t)return '<div class="c"><i class="dot f"></i></div>';
+    var a=yCell(ds,'habits'),col=a.indexOf('"d"')>-1?'var(--green)':a.indexOf('"hp"')>-1?'var(--orange)':a.indexOf('"hz"')>-1?'var(--red)':'';
+    return '<button class="c" data-a="wg-day" data-d="'+ds+'"><i class="dot"'+(col?' style="background:'+col+'"':'')+'></i></button>';
+  }).join('');
+  html+='<div class="r">Workout</div>'+days.map(function(ds){
+    if(ds>t)return '<div class="c"><i class="dot f"></i></div>';
+    var dn=wdone(ds),col=dn.length?dn[0].c:isRest(ds)?restItem().c:'';
+    return '<button class="c" data-a="wg-day" data-d="'+ds+'"><i class="dot"'+(col?' style="background:'+col+'"':'')+'></i></button>';
+  }).join('');
+  return html+'</div>';
+}
 function renderProfilePage(){
   var p=S.profile,n=new Date(),y=ui.year,mode=ui.pmode||'all';
-  var sub=[p.age?esc(p.age)+' yrs':'',p.height?esc(p.height)+' cm':'',p.gender?esc(p.gender):''].filter(Boolean).join(' · ');
-  var html='<h1 class="big">Profile</h1><section class="card phead">'+
-    '<button class="avatar xl" data-a="profile-edit" aria-label="Edit profile">'+avatarInner(p)+'</button>'+
-    '<div class="pname">'+(p.name?esc(p.name):'<span class="ph">Your name</span>')+'</div>'+
-    (sub?'<div class="psub">'+sub+'</div>':'')+(p.bio?'<div class="pbio">'+esc(p.bio)+'</div>':'')+
-    '<button class="pedit" data-a="profile-edit">Edit profile</button></section>';
-  html+='<section class="card pcard"><div class="sum-h">'+esc(monthName(n))+' so far</div>'+overviewTiles(n.getFullYear(),n.getMonth())+'</section>';
-  /* calendar summary: last 2 months, or the whole year */
+  var sub=[p.age?esc(p.age)+' yrs':'',p.height?esc(p.height)+' cm':'',p.gender?esc(p.gender):''].filter(Boolean).join(' \u00b7 ');
+  var html='<div class="eyebrow">'+esc(monthName(n))+'</div><h1 class="big">Summary</h1>'+
+    '<section class="card prof2"><button class="avatar" data-a="profile-edit" aria-label="Edit profile">'+avatarInner(p)+'</button>'+
+    '<div class="pt2"><b>'+(p.name?esc(p.name):'<span class="ph">Your name</span>')+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</div>'+
+    '<button class="txt" data-a="profile-edit">Edit</button></section>';
+  html+='<div class="sh2"><b>This week</b></div><section class="card wgc">'+weekGrid()+'</section>';
   var seg='<div class="pseg">'+[['all','Overview'],['habits','Habits'],['workouts','Workouts'],['mood','Mood']].map(function(o){
     return '<button class="'+(mode===o[0]?'on':'')+'" data-a="pmode" data-m="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div>';
   var body,head;
@@ -1280,19 +1357,11 @@ function renderProfilePage(){
     body='<div class="yr">'+months+'</div>';
   }else{
     var pm=new Date(n.getFullYear(),n.getMonth()-1,1);
-    head='<div class="sum-h">Last two months</div>';
+    head='';
     body='<div class="yr two">'+yMonth(pm.getFullYear(),pm.getMonth(),mode,true)+yMonth(n.getFullYear(),n.getMonth(),mode,true)+'</div>';
   }
-  html+='<section class="card pcard">'+head+seg+body+yLegend(mode)+
+  html+='<div class="sh2"><b>Calendar</b></div><section class="card pcard" style="margin-top:0">'+head+seg+body+yLegend(mode)+
     '<button class="yexp" data-a="yexp">'+(ui.yexp?'Show less '+I.chevU:'Show whole year '+I.chevD)+'</button></section>';
-  /* workouts this year */
-  var wy=ui.yexp?y:n.getFullYear(),per={},rest=0,t=today();
-  for(var ds=wy+'-01-01';ds<=wy+'-12-31'&&ds<=t;ds=addDays(ds,1)){wdone(ds).forEach(function(w){per[w.id]=(per[w.id]||0)+1});if(isRest(ds))rest++}
-  var ws=S.workouts.filter(function(w){return !w.archived||per[w.id]});
-  if(ws.length){
-    html+='<section class="card pcard"><div class="sum-h">Workouts in '+wy+'</div>'+
-      bars(ws.map(function(w){return {l:'<span class="cd" style="background:'+w.c+'"></span>'+esc(w.name),n:per[w.id]||0,c:w.c}}).concat([{l:'<span class="cd" style="background:'+restItem().c+'"></span>Rest day',n:rest,c:restItem().c}]))+'</section>';
-  }
   return html;
 }
 
@@ -1309,6 +1378,8 @@ function row(icon,color,label,action,right,cls){
 function renderSettingsPage(){
   var nArch=S.habits.filter(function(h){return h.archived}).length+S.workouts.filter(function(w){return w.archived}).length;
   var html='<div class="page"><h1 class="big">Settings</h1>';
+  html+='<div class="glabel">Language</div><div class="group">'+[['en','\ud83c\uddec\ud83c\udde7','English'],['nl','\ud83c\uddf3\ud83c\uddf1','Nederlands'],['es','\ud83c\uddea\ud83c\uddf8','Espa\u00f1ol']].map(function(l){
+    return '<button class="gbtn plain grow" data-a="lang" data-l="'+l[0]+'" translate="no"><span class="lflag">'+l[1]+'</span><span class="gl notr">'+l[2]+'</span>'+(LANG===l[0]?'<span class="chk">'+I.check+'</span>':'')+'</button>'}).join('')+'</div>';
   html+='<div class="glabel">Cloud sync</div><div class="group">';
   if(signedIn()){
     var s=syncStatusText();
@@ -1612,8 +1683,8 @@ function ansSheet(id){
 function ansBody(){
   var h=H(ansH),v=val(ansDs,h),g=hasGoal(h),tiles=[];
   if(h.type==='check'){
-    tiles=[['1','Yes',v===true,'on-g'],['0','No',v===false,'on-r'],['na','N/A',v==='na','on-n']].map(function(t){
-      return '<button class="at'+(t[2]?' '+t[3]:'')+'" data-a="ans-check" data-v="'+t[0]+'">'+t[1]+'</button>'});
+    tiles=[['1','Yes',v===true,'on-hy'],['0','No',v===false,'on-hn'],['na','N/A',v==='na','on-n']].map(function(t){
+      return '<button style="--hc:'+h.c+'" class="at'+(t[2]?' '+t[3]:'')+'" data-a="ans-check" data-v="'+t[0]+'">'+t[1]+'</button>'});
   }else if(h.type==='single'){
     tiles=h.options.map(function(o){var on=v===o.id;
       return '<button class="at'+(on?((!g||o.goal)?' on-g':' on-o'):'')+'" data-a="ans-single" data-o="'+o.id+'">'+(o.goal&&g?'<span class="star">\u2605</span>':'')+esc(o.label)+'</button>'});
@@ -1691,7 +1762,7 @@ function habitChanges(a,b){
 function daysBetween(a,b){return Math.round((parseD(b)-parseD(a))/864e5)}
 function answerText(h,v){
   var st=status(h,v);if(!st)return {t:'–',c:''};
-  if(h.type==='check')return st==='na'?{t:'N/A',c:''}:{t:st==='done'?'Yes':'No',c:st==='done'?'g':'r'};
+  if(h.type==='check')return st==='na'?{t:'N/A',c:''}:{t:st==='done'?'Yes':'No',c:st==='done'?'hy':'hn'};
   if(h.type==='number')return {t:numText(h,v),c:st==='done'?'g':'o'};
   if(h.type==='single'){var o=optOf(h,v);return {t:o.label,c:st==='done'?'g':'o'}}
   var ls=v.map(function(id){var o=optOf(h,id);return o?o.label:null}).filter(Boolean);
@@ -1725,13 +1796,15 @@ function logBody(){
   var hasG=(h.type==='single'&&hasGoal(h))||(h.type==='number'&&h.goal!=null);
   var missLabel=h.type==='single'&&hasGoal(h)?'Other answer':h.type==='multi'?'None':h.type==='number'?'Not on goal':'No';
   var html='<div class="lhead"><div class="lname">'+esc(h.name)+'</div><div class="lsub">'+TYPE_LABEL[h.type]+' · '+daysText(h.days)+(p?' · Paused':'')+(h.hidden?' · Hidden':'')+(h.archived?' · Archived':'')+'</div></div>';
-  html+='<div class="ltiles">'+tile(run<1?'–':run,run===1?'Day running':'Days running')+tile(s.rate,'Success rate','g')+tile(streak(h),'Current streak')+
+  if(h.type==='check'){var yr=ynRun(h);html+='<div class="ltiles" style="--hc:'+h.c+'">'+tile(run<1?'–':run,run===1?'Day running':'Days running')+tile(s.done,'Yes')+tile(s.miss,'No')+
+    tile(yr.n||'\u2013',yr.n?yr.l:'In a row')+tile(s.na,'N/A')+tile(s.none,'Not filled in')+'</div>'}
+  else html+='<div class="ltiles">'+tile(run<1?'–':run,run===1?'Day running':'Days running')+tile(s.rate,'Success rate','g')+tile(streak(h),'Current streak')+
     tile(s.done,hasG?'On goal':h.type==='number'?'Logged':h.type==='check'?'Yes':'Done','g')+tile(s.miss,missLabel,(h.type==='single'||h.type==='number')?'o':'r')+tile(s.none,'Not filled in')+'</div>';
   html+='<div class="glabel">Details</div><div class="group">'+
     '<div class="grow"><label>Started</label><input type="date" data-f="l-start" value="'+h.created+'" max="'+t+'"></div>'+
-    '<div class="grow"><label>Best streak</label><span class="rv">'+s.best+(s.best===1?' day':' days')+'</span></div>'+
+    (h.type==='check'?'':'<div class="grow"><label>Best streak</label><span class="rv">'+s.best+(s.best===1?' day':' days')+'</span></div>')+
     (h.type==='number'&&s.nn?'<div class="grow"><label>Average</label><span class="rv">'+esc(numText(h,s.sum/s.nn))+'</span></div><div class="grow"><label>Total</label><span class="rv">'+esc(numText(h,s.sum))+'</span></div>':'')+
-    (s.na?'<div class="grow"><label>N/A days</label><span class="rv">'+s.na+'</span></div>':'')+
+    (s.na&&h.type!=='check'?'<div class="grow"><label>N/A days</label><span class="rv">'+s.na+'</span></div>':'')+
     (s.top?'<div class="grow"><label>Most picked</label><span class="rv">'+esc(s.top)+'</span></div>':'')+
     '</div><div class="ghint">Change the start date to fill in days from before you created this habit.</div>';
   html+='<div class="glabel">Note</div><div class="group"><div class="grow"><textarea data-f="l-note" rows="2" maxlength="300" placeholder="Why you started, or what your goal is">'+esc(h.note)+'</textarea></div></div>';
@@ -1743,7 +1816,7 @@ function logBody(){
     '<div class="grow"><label>Fill in a day</label><input type="date" data-f="l-day" value="" max="'+t+'"></div>'+
     shown.map(function(ds){
       var a=answerText(h,val(ds,h)),d=parseD(ds),open=logOpen===ds;
-      return '<button class="grow lg-row" data-a="l-open" data-d="'+ds+'"><span class="lg-d">'+esc(d.toLocaleDateString('en-GB',{weekday:'short'})+' '+niceDate(ds))+'</span>'+
+      return '<button class="grow lg-row" style="--hc:'+h.c+'" data-a="l-open" data-d="'+ds+'"><span class="lg-d">'+esc(d.toLocaleDateString(LOC,{weekday:'short'})+' '+niceDate(ds))+'</span>'+
         '<span class="lg-v '+a.c+'">'+esc(a.t)+'</span><span class="rchev">'+(open?I.chevD:I.chevR)+'</span></button>'+
         (open?'<div class="lg-edit">'+controls(h,val(ds,h),ds)+'<button class="sbtn red" data-a="l-clear" data-d="'+ds+'">Clear this day</button></div>':'');
     }).join('')+
@@ -1852,7 +1925,7 @@ function scrollToCal(){var c=$('.cal');if(c&&c.scrollIntoView)c.scrollIntoView({
 
 /* ---------- actions ---------- */
 var A={
-  'tab':function(d){if(ui.tab===d.t&&d.t==='home'){ui.view='all';ui.edit=false}ui.tab=d.t;ui.edit=false;if(d.t==='profile')ui.year=new Date().getFullYear();render();window.scrollTo(0,0)},
+  'tab':function(d){if(ui.tab===d.t&&d.t==='home'){ui.view='all';ui.edit=false}ui.tab=d.t;ui.edit=false;ui.wedit=false;if(d.t==='profile')ui.year=new Date().getFullYear();render();window.scrollTo(0,0)},
   'm-prev':function(){step(-1)},
   'm-next':function(){step(1)},
   'm-today':function(){var n=new Date();ui.month=new Date(n.getFullYear(),n.getMonth(),1);ui.sel=today();render()},
@@ -1882,6 +1955,8 @@ var A={
   },
   'log-none':function(d){var ds=d.d||ui.sel,h=H(d.h),cur=val(ds,h);setLog(ds,h,(Array.isArray(cur)&&cur.length===0)?undefined:[]);afterLog()},
   'h-log':function(d){logSheet(d.id)},
+  'wg-day':function(d){if(d.d>today())return;ui.tab='home';ui.sel=d.d;var x=parseD(d.d);ui.month=new Date(x.getFullYear(),x.getMonth(),1);render();window.scrollTo(0,0)},
+  'lang':function(d){if(d.l===LANG)return;LANG=d.l;saveUI();location.reload()},
   'mood-step':function(d){var st=d.s||null;ui.moodStep=ui.moodStep===st?null:st;render()},
   'mood-tap':function(d){
     var v=+d.v,cleared=false;
@@ -1954,7 +2029,7 @@ var A={
     setW(ui.sel,arr);render();
   },
   'w-rest':function(){setW(ui.sel,isRest(ui.sel)?[]:[REST]);render()},
-  'edit-toggle':function(){ui.edit=!ui.edit;render()},
+  'edit-toggle':function(d){if(d.s==='w')ui.wedit=!ui.wedit;else ui.edit=!ui.edit;render()},
   'h-up':function(d){moveIn(S.habits.filter(function(h){return !h.archived}),d.id,-1)},
   'h-down':function(d){moveIn(S.habits.filter(function(h){return !h.archived}),d.id,1)},
   'w-up':function(d){moveIn(activeWorkouts(),d.id,-1)},
@@ -2025,7 +2100,7 @@ var A={
   'w-archive':function(){
     var w=W(wdraft.id);w.archived=today();w.u=Date.now();
     if(ui.view==='w:'+w.id)ui.view='all';
-    if(!activeWorkouts().length)ui.edit=false;
+    if(!activeWorkouts().length)ui.wedit=false;
     touch();closeSheet();render();toast('Archived — find it in Settings');
   },
   'w-restore':function(d){var w=W(d.id);w.archived=null;w.o=nextO(S.workouts);w.u=Date.now();sortItems(S);touch();$('#ab').innerHTML=archivedBody();render();toast('Workout restored')},
@@ -2113,13 +2188,19 @@ function delWorkout(id,fromSheet){
     var n=Date.now();
     Object.keys(S.wlog).forEach(function(ds){var b=S.wlog[ds].length;S.wlog[ds]=S.wlog[ds].filter(function(x){return x!==id});if(S.wlog[ds].length!==b)S.wt[ds]=n;if(!S.wlog[ds].length)delete S.wlog[ds]});
     if(ui.view==='w:'+id)ui.view='all';
-    if(!activeWorkouts().length)ui.edit=false;
+    if(!activeWorkouts().length)ui.wedit=false;
     touch();if(fromSheet)closeSheet();else $('#ab').innerHTML=archivedBody();render();toast('Workout deleted');
   });
 }
 
 document.addEventListener('click',function(e){
-  var el=e.target.closest('[data-a]');if(!el)return;
+  var el=e.target.closest('[data-a]');
+  if(!el){
+    /* tap on an empty part of the Today calendar folds it open or closed */
+    var cc=e.target.closest('#app .card.cal');
+    if(cc&&ui.tab==='home'&&!e.target.closest('button,a,input,select,textarea,.tile,.sheet')&&A.collapse)A.collapse({},null,e);
+    return;
+  }
   var fn=A[el.getAttribute('data-a')];if(!fn)return;
   if(el.disabled)return;
   fn(el.dataset,el,e);
@@ -2177,6 +2258,68 @@ document.addEventListener('visibilitychange',function(){
   sync();
 });
 window.addEventListener('online',function(){sync()});
+
+/* ---------- languages ---------- */
+var DICT={"nl": {"Choose month and year": "Kies maand en jaar", "Previous": "Vorige", "Next": "Volgende", "Previous year": "Vorig jaar", "Next year": "Volgend jaar", "★ = goal": "★ = doel", "How was your day? Anything worth remembering?": "Hoe was je dag? Iets om te onthouden?", "Move up": "Omhoog", "Move down": "Omlaag", "e.g. Wake up at 8:00": "bijv. Om 8:00 opstaan", "Neutral": "Neutraal", "Remove answer": "Antwoord verwijderen", "e.g. L, glasses, g": "bijv. L, glazen, g", "Optional": "Optioneel", "e.g. Upper day": "bijv. Upper day", "Edit profile": "Profiel wijzigen", "A few words about you or your goals": "Een paar woorden over jou of je doelen", "Happy": "Blij", "Anxious": "Angstig", "Sad": "Verdrietig", "Irritated": "Geïrriteerd", "Yes in a row": "Ja op rij", "No in a row": "Nee op rij", "In a row": "Op rij", "About you": "Over jou", "Account": "Account", "Active days": "Actieve dagen", "Add a note for this day": "Voeg een notitie toe voor deze dag", "Add answer": "Antwoord toevoegen", "Add at least one answer": "Voeg minstens één antwoord toe", "Add feeling": "Gevoel toevoegen", "Add feelings in Settings → Mood feelings": "Voeg gevoelens toe in Instellingen → Gevoelens", "Add photo": "Foto toevoegen", "Add the workouts you do, like Push day or Running.": "Voeg de trainingen toe die je doet, zoals Push day of Hardlopen.", "Age": "Leeftijd", "All done": "Alles gedaan", "All workouts": "Alle trainingen", "Amount": "Aantal", "Answer type": "Soort antwoord", "Answers": "Antwoorden", "Answers changed": "Antwoorden gewijzigd", "Appearance": "Weergave", "Archive habit": "Gewoonte archiveren", "Archive workout": "Training archiveren", "Archived": "Gearchiveerd", "Archived habits and workouts keep their history and show up here.": "Gearchiveerde gewoontes en trainingen houden hun geschiedenis en staan hier.", "Archived — find it in Settings": "Gearchiveerd — je vindt het in Instellingen", "At least": "Minstens", "At most": "Hoogstens", "Automatic": "Automatisch", "Automatic follows your iPhone. Black & white shows everything in grey tones, for a calmer look.": "Automatisch volgt je iPhone. Zwart-wit toont alles in grijstinten, voor een rustiger beeld.", "Average": "Gemiddeld", "Backup": "Back-up", "Backup imported": "Back-up geïmporteerd", "Bad": "Slecht", "Best streak": "Langste reeks", "Bio": "Bio", "Black & white": "Zwart-wit", "Calendar": "Kalender", "Calm": "Kalm", "Cancel": "Annuleren", "Card color": "Kaartkleur", "Change photo": "Foto wijzigen", "Change the start date to fill in days from before you created this habit.": "Wijzig de startdatum om dagen in te vullen van voordat je deze gewoonte maakte.", "Changes are saved online automatically when you have internet.": "Wijzigingen worden automatisch online opgeslagen als je internet hebt.", "Choose month": "Kies maand", "Clear mood": "Stemming wissen", "Clear this day": "Deze dag wissen", "Close": "Sluiten", "Cloud sync": "Cloudsync", "Color": "Kleur", "Couldn’t reach Supabase. Check the URL and your internet.": "Kan Supabase niet bereiken. Controleer de URL en je internet.", "Couldn’t read that photo": "Kan die foto niet lezen", "Couldn’t save — storage is full": "Kan niet opslaan — opslag is vol", "Create your first habit to start tracking.": "Maak je eerste gewoonte om te beginnen.", "Created": "Gemaakt", "Current streak": "Huidige reeks", "Customize": "Aanpassen", "Daily goal": "Dagdoel", "Dark": "Donker", "Data erased": "Gegevens gewist", "Day running": "Dag op rij", "Day streak": "Dagen op rij", "Days logged": "Dagen ingevuld", "Days running": "Dagen op rij", "Delete": "Verwijderen", "Delete habit": "Gewoonte verwijderen", "Delete workout": "Training verwijderen", "Details": "Details", "Done": "Klaar", "Done days": "Voltooide dagen", "Edit": "Wijzig", "Edit habit": "Gewoonte wijzigen", "Edit workout": "Training wijzigen", "Email": "E-mail", "Energetic": "Energiek", "Enter a number": "Vul een getal in", "Enter amount": "Vul aantal in", "Erase": "Wissen", "Erase data on this phone": "Gegevens op deze telefoon wissen", "Erase data on this phone?": "Gegevens op deze telefoon wissen?", "Error": "Fout", "Every day": "Elke dag", "Export backup": "Back-up exporteren", "Feelings": "Gevoelens", "Feelings saved": "Gevoelens opgeslagen", "Female": "Vrouw", "Fill in a day": "Vul een dag in", "Fill in all four fields.": "Vul alle vier de velden in.", "Filled-in days": "Ingevulde dagen", "Mon": "Ma", "Tue": "Di", "Wed": "Wo", "Thu": "Do", "Fri": "Vr", "Sat": "Za", "Sun": "Zo", "Gender": "Geslacht", "Give your habit a name": "Geef je gewoonte een naam", "Give your workout a name": "Geef je training een naam", "Go to today": "Naar vandaag", "Goal": "Doel", "★ Goal": "★ Doel", "Goal removed": "Doel verwijderd", "Good": "Goed", "Good days": "Goede dagen", "Great": "Super", "Habit added": "Gewoonte toegevoegd", "Habit colors are used when you view several things together in the calendar.": "Gewoontekleuren worden gebruikt als je meerdere dingen samen in de kalender bekijkt.", "Habit deleted": "Gewoonte verwijderd", "Habit hidden — Edit to show it again": "Gewoonte verborgen — via Wijzig weer tonen", "Habit log": "Gewoontelog", "Habit name": "Naam gewoonte", "Habit not found": "Gewoonte niet gevonden", "Habit paused": "Gewoonte gepauzeerd", "Habit restored": "Gewoonte teruggezet", "Habit resumed": "Gewoonte hervat", "Habit saved": "Gewoonte opgeslagen", "Habit visible again": "Gewoonte weer zichtbaar", "Habits": "Gewoontes", "Height": "Lengte", "Hidden": "Verborgen", "Hide habit": "Gewoonte verbergen", "History": "Geschiedenis", "Home": "Vandaag", "How are you feeling today?": "Hoe voel je je vandaag?", "How are you?": "Hoe gaat het?", "How do you feel?": "Hoe voel je je?", "How you feel": "Hoe je je voelt", "How you felt": "Hoe je je voelde", "Import": "Importeren", "Import backup": "Back-up importeren", "Import this backup?": "Deze back-up importeren?", "Incomplete": "Onvolledig", "It will also be removed from every day you logged it. Archive it instead if you want to keep the history.": "Hij wordt ook verwijderd van elke dag waarop je hem invulde. Archiveer hem als je de geschiedenis wilt bewaren.", "Language": "Taal", "Last time": "Vorige keer", "Legend colors": "Legendakleuren", "Light": "Licht", "Logged": "Ingevuld", "Low": "Matig", "Low days": "Matige dagen", "Male": "Man", "Mood": "Stemming", "Mood feelings": "Gevoelens", "Most picked": "Meest gekozen", "Multiple choice": "Meerkeuze", "N/A": "N.v.t.", "N/A days": "N.v.t.-dagen", "Name": "Naam", "New habit": "Nieuwe gewoonte", "New workout": "Nieuwe training", "No": "Nee", "No goal set": "Geen doel", "No habits apply to this day.": "Geen gewoontes voor deze dag.", "No habits yet": "Nog geen gewoontes", "No workouts yet": "Nog geen trainingen", "None": "Geen", "None done": "Niets gedaan", "Not all": "Niet alles", "Not filled in": "Niet ingevuld", "Not on goal": "Doel niet gehaald", "Not set": "Niet ingesteld", "Not set up — your data is only on this phone.": "Niet ingesteld — je gegevens staan alleen op deze telefoon.", "Not synced yet": "Nog niet gesynchroniseerd", "Note": "Notitie", "Nothing archived": "Niets gearchiveerd", "Nothing filled in yet.": "Nog niets ingevuld.", "Nothing scheduled": "Niets gepland", "Nothing to show yet.": "Nog niets te tonen.", "Number": "Getal", "OK": "OK", "Offline — will sync when online": "Offline — synchroniseert zodra je online bent", "Okay": "Oké", "On goal": "Doel gehaald", "Or tick one or more below to see them together, then tap Done.": "Of vink er hieronder een of meer aan om ze samen te zien, en tik op Klaar.", "Other": "Anders", "Other answer": "Ander antwoord", "Overview": "Alles", "Password": "Wachtwoord", "Pause habit": "Gewoonte pauzeren", "Paused": "Gepauzeerd", "Pick at least one day": "Kies minstens één dag", "Profile": "Profiel", "Remove": "Verwijderen", "Repeat on": "Herhalen op", "Rest day": "Rustdag", "Rest days": "Rustdagen", "Rested": "Uitgerust", "Restore": "Terugzetten", "Restored": "Teruggezet", "Restoring brings it back from today. Its history stays as it was.": "Terugzetten brengt hem terug vanaf vandaag. De geschiedenis blijft zoals hij was.", "Resume": "Hervatten", "Resume habit": "Gewoonte hervatten", "Resumed": "Hervat", "Selected": "Geselecteerd", "Sessions": "Sessies", "Set up cloud sync": "Cloudsync instellen", "Settings": "Instellingen", "Show habit": "Gewoonte tonen", "Show in calendar": "Tonen in kalender", "Show less": "Minder tonen", "Show more": "Meer tonen", "Show one week": "Eén week tonen", "Show whole month": "Hele maand tonen", "Show whole year": "Heel jaar tonen", "Shown again": "Weer zichtbaar", "Sick": "Ziek", "Sign in": "Inloggen", "Sign in failed": "Inloggen mislukt", "Sign out": "Uitloggen", "Sign out of cloud sync?": "Uitloggen bij cloudsync?", "Signed in — syncing": "Ingelogd — bezig met synchroniseren", "Signed out — please sign in again": "Uitgelogd — log opnieuw in", "Signing in…": "Inloggen…", "Since last time": "Sinds vorige keer", "Single choice": "Eén keuze", "Some done": "Deels gedaan", "Started": "Gestart", "Status": "Status", "Stressed": "Gestrest", "Success rate": "Slagingspercentage", "Summary": "Overzicht", "Supabase project": "Supabase-project", "Sync failed": "Synchroniseren mislukt", "Sync now": "Nu synchroniseren", "Syncing…": "Synchroniseren…", "Tap a face": "Tik op een gezicht", "Tap an item to change its color. Use the arrows to change the order — it changes everywhere in the app.": "Tik op een item om de kleur te wijzigen. Gebruik de pijlen om de volgorde te wijzigen — dat verandert overal in de app.", "That file isn’t a Daily Hub backup": "Dat bestand is geen Daily Hub-back-up", "The daily goal must be a number": "Het dagdoel moet een getal zijn", "These show up when you fill in your morning and evening mood. Use the arrows to change the order.": "Deze verschijnen als je je stemming invult. Gebruik de pijlen om de volgorde te wijzigen.", "This also deletes its whole history. Archive it instead if you want to keep the history.": "Dit verwijdert ook de hele geschiedenis. Archiveer hem als je de geschiedenis wilt bewaren.", "This week": "Deze week", "Times": "Keer", "Tired": "Moe", "Today": "Vandaag", "Total": "Totaal", "Unit": "Eenheid", "Use the details from your Supabase project and the user you created there.": "Gebruik de gegevens van je Supabase-project en de gebruiker die je daar hebt gemaakt.", "Weekdays": "Werkdagen", "Weekends": "Weekenden", "Workout": "Training", "Workout added": "Training toegevoegd", "Workout days": "Trainingsdagen", "Workout deleted": "Training verwijderd", "Workout restored": "Training teruggezet", "Workout saved": "Training opgeslagen", "Workouts": "Trainingen", "Yes": "Ja", "Yes / No": "Ja / Nee", "Yesterday": "Gisteren", "Your data stays on this phone and in the cloud. It just stops syncing.": "Je gegevens blijven op deze telefoon en in de cloud. Alleen het synchroniseren stopt.", "Your name": "Je naam", "Your profile, habits, workouts and history will be deleted from this phone and cloud sync is signed out. Your cloud copy is not deleted.": "Je profiel, gewoontes, trainingen en geschiedenis worden van deze telefoon verwijderd en je wordt uitgelogd bij cloudsync. Je cloudkopie wordt niet verwijderd.", "A backup file you can keep, e.g. in iCloud Drive. Import adds anything missing from the backup.": "Een back-upbestand dat je kunt bewaren, bijv. in iCloud Drive. Importeren voegt toe wat ontbreekt.", "Check-in": "Check-in", "pick all that apply": "kies wat van toepassing is", "tap to manage": "tik om te beheren", "Hidden habits": "Verborgen gewoontes", "_t": {"hid1": "{0} verborgen gewoonte", "hidn": "{0} verborgen gewoontes", "nhab": "{0} gewoontes", "nwk": "{0} trainingen", "ndl": "{0} dagen ingevuld", "day1": "{0} dag", "dayn": "{0} dagen", "yrs": "{0} jaar", "nsel": "{0} geselecteerd", "ov": "{0} in het kort", "sofar": "{0} tot nu toe", "synced": "Gesynchroniseerd {0}", "same": "Gelijk aan {0}", "vs": "{0} t.o.v. {1}", "nsched": "Niet gepland op deze dag: {0}", "psince": "Gepauzeerd sinds {0}", "arch": "Gearchiveerd {0}", "ren": "Hernoemd van “{0}”", "gset": "Doel ingesteld op {0}", "sset": "Startdatum ingesteld op {0}", "uset": "Eenheid ingesteld op {0}", "rep": "Herhaaldagen: {0}", "del": "“{0}” verwijderen?", "goal": "Doel {0}", "ans": "Antwoord {0}", "in": "{0} in {1}", "bk": "De back-up bevat {0} gewoontes en {1} ingevulde dagen. Hij wordt samengevoegd met de gegevens op deze telefoon — niets nieuwers wordt overschreven."}}, "es": {"Choose month and year": "Elige mes y año", "Previous": "Anterior", "Next": "Siguiente", "Previous year": "Año anterior", "Next year": "Año siguiente", "★ = goal": "★ = meta", "How was your day? Anything worth remembering?": "¿Qué tal tu día? ¿Algo que recordar?", "Move up": "Subir", "Move down": "Bajar", "e.g. Wake up at 8:00": "p. ej. Levantarse a las 8:00", "Neutral": "Neutral", "Remove answer": "Quitar respuesta", "e.g. L, glasses, g": "p. ej. L, vasos, g", "Optional": "Opcional", "e.g. Upper day": "p. ej. Día de tren superior", "Edit profile": "Editar perfil", "A few words about you or your goals": "Unas palabras sobre ti o tus metas", "Happy": "Feliz", "Anxious": "Ansioso", "Sad": "Triste", "Irritated": "Irritado", "Yes in a row": "Sí seguidos", "No in a row": "No seguidos", "In a row": "Seguidos", "About you": "Sobre ti", "Account": "Cuenta", "Active days": "Días activos", "Add a note for this day": "Añade una nota para este día", "Add answer": "Añadir respuesta", "Add at least one answer": "Añade al menos una respuesta", "Add feeling": "Añadir sentimiento", "Add feelings in Settings → Mood feelings": "Añade sentimientos en Ajustes → Sentimientos", "Add photo": "Añadir foto", "Add the workouts you do, like Push day or Running.": "Añade los entrenos que haces, como Push day o Correr.", "Age": "Edad", "All done": "Todo hecho", "All workouts": "Todos los entrenos", "Amount": "Cantidad", "Answer type": "Tipo de respuesta", "Answers": "Respuestas", "Answers changed": "Respuestas cambiadas", "Appearance": "Apariencia", "Archive habit": "Archivar hábito", "Archive workout": "Archivar entreno", "Archived": "Archivado", "Archived habits and workouts keep their history and show up here.": "Los hábitos y entrenos archivados conservan su historial y aparecen aquí.", "Archived — find it in Settings": "Archivado — lo encuentras en Ajustes", "At least": "Al menos", "At most": "Como máximo", "Automatic": "Automático", "Automatic follows your iPhone. Black & white shows everything in grey tones, for a calmer look.": "Automático sigue a tu iPhone. Blanco y negro muestra todo en tonos grises, para un aspecto más tranquilo.", "Average": "Media", "Backup": "Copia de seguridad", "Backup imported": "Copia importada", "Bad": "Mal", "Best streak": "Mejor racha", "Bio": "Bio", "Black & white": "Blanco y negro", "Calendar": "Calendario", "Calm": "Tranquilo", "Cancel": "Cancelar", "Card color": "Color de tarjeta", "Change photo": "Cambiar foto", "Change the start date to fill in days from before you created this habit.": "Cambia la fecha de inicio para rellenar días de antes de crear este hábito.", "Changes are saved online automatically when you have internet.": "Los cambios se guardan en línea automáticamente cuando tienes internet.", "Choose month": "Elige mes", "Clear mood": "Borrar ánimo", "Clear this day": "Borrar este día", "Close": "Cerrar", "Cloud sync": "Sincronización", "Color": "Color", "Couldn’t reach Supabase. Check the URL and your internet.": "No se pudo conectar con Supabase. Revisa la URL y tu internet.", "Couldn’t read that photo": "No se pudo leer esa foto", "Couldn’t save — storage is full": "No se pudo guardar — almacenamiento lleno", "Create your first habit to start tracking.": "Crea tu primer hábito para empezar.", "Created": "Creado", "Current streak": "Racha actual", "Customize": "Personalizar", "Daily goal": "Meta diaria", "Dark": "Oscuro", "Data erased": "Datos borrados", "Day running": "Día seguido", "Day streak": "Días seguidos", "Days logged": "Días registrados", "Days running": "Días seguidos", "Delete": "Eliminar", "Delete habit": "Eliminar hábito", "Delete workout": "Eliminar entreno", "Details": "Detalles", "Done": "Listo", "Done days": "Días completos", "Edit": "Editar", "Edit habit": "Editar hábito", "Edit workout": "Editar entreno", "Email": "Correo", "Energetic": "Con energía", "Enter a number": "Introduce un número", "Enter amount": "Introduce cantidad", "Erase": "Borrar", "Erase data on this phone": "Borrar datos de este teléfono", "Erase data on this phone?": "¿Borrar datos de este teléfono?", "Error": "Error", "Every day": "Todos los días", "Export backup": "Exportar copia", "Feelings": "Sentimientos", "Feelings saved": "Sentimientos guardados", "Female": "Mujer", "Fill in a day": "Rellena un día", "Fill in all four fields.": "Rellena los cuatro campos.", "Filled-in days": "Días rellenados", "Mon": "Lun", "Tue": "Mar", "Wed": "Mié", "Thu": "Jue", "Fri": "Vie", "Sat": "Sáb", "Sun": "Dom", "Gender": "Sexo", "Give your habit a name": "Ponle un nombre a tu hábito", "Give your workout a name": "Ponle un nombre a tu entreno", "Go to today": "Ir a hoy", "Goal": "Meta", "★ Goal": "★ Meta", "Goal removed": "Meta eliminada", "Good": "Bien", "Good days": "Días buenos", "Great": "Genial", "Habit added": "Hábito añadido", "Habit colors are used when you view several things together in the calendar.": "Los colores de hábitos se usan cuando ves varias cosas juntas en el calendario.", "Habit deleted": "Hábito eliminado", "Habit hidden — Edit to show it again": "Hábito oculto — usa Editar para mostrarlo", "Habit log": "Registro del hábito", "Habit name": "Nombre del hábito", "Habit not found": "Hábito no encontrado", "Habit paused": "Hábito en pausa", "Habit restored": "Hábito restaurado", "Habit resumed": "Hábito reanudado", "Habit saved": "Hábito guardado", "Habit visible again": "Hábito visible de nuevo", "Habits": "Hábitos", "Height": "Altura", "Hidden": "Oculto", "Hide habit": "Ocultar hábito", "History": "Historial", "Home": "Hoy", "How are you feeling today?": "¿Cómo te sientes hoy?", "How are you?": "¿Cómo estás?", "How do you feel?": "¿Cómo te sientes?", "How you feel": "Cómo te sientes", "How you felt": "Cómo te sentiste", "Import": "Importar", "Import backup": "Importar copia", "Import this backup?": "¿Importar esta copia?", "Incomplete": "Incompleto", "It will also be removed from every day you logged it. Archive it instead if you want to keep the history.": "También se quitará de cada día en que lo registraste. Archívalo si quieres conservar el historial.", "Language": "Idioma", "Last time": "Última vez", "Legend colors": "Colores de la leyenda", "Light": "Claro", "Logged": "Registrado", "Low": "Bajo", "Low days": "Días bajos", "Male": "Hombre", "Mood": "Ánimo", "Mood feelings": "Sentimientos", "Most picked": "Más elegido", "Multiple choice": "Opción múltiple", "N/A": "N/A", "N/A days": "Días N/A", "Name": "Nombre", "New habit": "Nuevo hábito", "New workout": "Nuevo entreno", "No": "No", "No goal set": "Sin meta", "No habits apply to this day.": "No hay hábitos para este día.", "No habits yet": "Aún no hay hábitos", "No workouts yet": "Aún no hay entrenos", "None": "Ninguno", "None done": "Nada hecho", "Not all": "No todo", "Not filled in": "Sin rellenar", "Not on goal": "Meta no alcanzada", "Not set": "Sin definir", "Not set up — your data is only on this phone.": "Sin configurar — tus datos solo están en este teléfono.", "Not synced yet": "Aún sin sincronizar", "Note": "Nota", "Nothing archived": "Nada archivado", "Nothing filled in yet.": "Aún no hay nada.", "Nothing scheduled": "Nada programado", "Nothing to show yet.": "Aún no hay nada que mostrar.", "Number": "Número", "OK": "OK", "Offline — will sync when online": "Sin conexión — se sincronizará al conectarse", "Okay": "Normal", "On goal": "Meta alcanzada", "Or tick one or more below to see them together, then tap Done.": "O marca uno o más abajo para verlos juntos y toca Listo.", "Other": "Otro", "Other answer": "Otra respuesta", "Overview": "General", "Password": "Contraseña", "Pause habit": "Pausar hábito", "Paused": "En pausa", "Pick at least one day": "Elige al menos un día", "Profile": "Perfil", "Remove": "Quitar", "Repeat on": "Repetir los", "Rest day": "Día de descanso", "Rest days": "Días de descanso", "Rested": "Descansado", "Restore": "Restaurar", "Restored": "Restaurado", "Restoring brings it back from today. Its history stays as it was.": "Restaurar lo recupera desde hoy. Su historial se queda como estaba.", "Resume": "Reanudar", "Resume habit": "Reanudar hábito", "Resumed": "Reanudado", "Selected": "Seleccionado", "Sessions": "Sesiones", "Set up cloud sync": "Configurar sincronización", "Settings": "Ajustes", "Show habit": "Mostrar hábito", "Show in calendar": "Mostrar en calendario", "Show less": "Mostrar menos", "Show more": "Mostrar más", "Show one week": "Mostrar una semana", "Show whole month": "Mostrar mes completo", "Show whole year": "Mostrar año completo", "Shown again": "Visible de nuevo", "Sick": "Enfermo", "Sign in": "Iniciar sesión", "Sign in failed": "Error al iniciar sesión", "Sign out": "Cerrar sesión", "Sign out of cloud sync?": "¿Cerrar sesión de la sincronización?", "Signed in — syncing": "Sesión iniciada — sincronizando", "Signed out — please sign in again": "Sesión cerrada — vuelve a iniciar sesión", "Signing in…": "Iniciando sesión…", "Since last time": "Desde la última vez", "Single choice": "Opción única", "Some done": "Parte hecha", "Started": "Empezado", "Status": "Estado", "Stressed": "Estresado", "Success rate": "Tasa de éxito", "Summary": "Resumen", "Supabase project": "Proyecto de Supabase", "Sync failed": "Error al sincronizar", "Sync now": "Sincronizar ahora", "Syncing…": "Sincronizando…", "Tap a face": "Toca una cara", "Tap an item to change its color. Use the arrows to change the order — it changes everywhere in the app.": "Toca un elemento para cambiar su color. Usa las flechas para cambiar el orden — cambia en toda la app.", "That file isn’t a Daily Hub backup": "Ese archivo no es una copia de Daily Hub", "The daily goal must be a number": "La meta diaria debe ser un número", "These show up when you fill in your morning and evening mood. Use the arrows to change the order.": "Aparecen cuando rellenas tu ánimo. Usa las flechas para cambiar el orden.", "This also deletes its whole history. Archive it instead if you want to keep the history.": "Esto también borra todo su historial. Archívalo si quieres conservar el historial.", "This week": "Esta semana", "Times": "Veces", "Tired": "Cansado", "Today": "Hoy", "Total": "Total", "Unit": "Unidad", "Use the details from your Supabase project and the user you created there.": "Usa los datos de tu proyecto de Supabase y el usuario que creaste allí.", "Weekdays": "Entre semana", "Weekends": "Fines de semana", "Workout": "Entreno", "Workout added": "Entreno añadido", "Workout days": "Días de entreno", "Workout deleted": "Entreno eliminado", "Workout restored": "Entreno restaurado", "Workout saved": "Entreno guardado", "Workouts": "Entrenos", "Yes": "Sí", "Yes / No": "Sí / No", "Yesterday": "Ayer", "Your data stays on this phone and in the cloud. It just stops syncing.": "Tus datos se quedan en este teléfono y en la nube. Solo deja de sincronizar.", "Your name": "Tu nombre", "Your profile, habits, workouts and history will be deleted from this phone and cloud sync is signed out. Your cloud copy is not deleted.": "Tu perfil, hábitos, entrenos e historial se borrarán de este teléfono y se cerrará la sesión de sincronización. Tu copia en la nube no se borra.", "A backup file you can keep, e.g. in iCloud Drive. Import adds anything missing from the backup.": "Un archivo de copia que puedes guardar, p. ej. en iCloud Drive. Importar añade lo que falte.", "Check-in": "Registro", "pick all that apply": "elige todo lo que aplique", "tap to manage": "toca para gestionar", "Hidden habits": "Hábitos ocultos", "_t": {"hid1": "{0} hábito oculto", "hidn": "{0} hábitos ocultos", "nhab": "{0} hábitos", "nwk": "{0} entrenos", "ndl": "{0} días registrados", "day1": "{0} día", "dayn": "{0} días", "yrs": "{0} años", "nsel": "{0} seleccionados", "ov": "Resumen de {0}", "sofar": "{0} hasta ahora", "synced": "Sincronizado {0}", "same": "Igual que {0}", "vs": "{0} vs {1}", "nsched": "No programado este día: {0}", "psince": "En pausa desde {0}", "arch": "Archivado {0}", "ren": "Renombrado de “{0}”", "gset": "Meta fijada en {0}", "sset": "Fecha de inicio: {0}", "uset": "Unidad: {0}", "rep": "Días de repetición: {0}", "del": "¿Eliminar “{0}”?", "goal": "Meta {0}", "ans": "Respuesta {0}", "in": "{0} en {1}", "bk": "La copia tiene {0} hábitos y {1} días registrados. Se combina con los datos de este teléfono — no se sobrescribe nada más reciente."}}};
+var TRL=LANG!=='en'?(DICT[LANG]||{}):null,TPL=TRL?(TRL._t||{}):{};
+var MISS={};
+function hasK(t){return !!TRL&&Object.prototype.hasOwnProperty.call(TRL,t)&&t!=='_t'}
+function fill(k,a){var x=TPL[k];if(!x)return null;return x.replace(/\{(\d)\}/g,function(_,i){return a[+i]})}
+var PATS=[
+  [/^(\d+) hidden habits?$/,function(m){return fill(m[1]==='1'?'hid1':'hidn',[m[1]])}],
+  [/^(\d+) habits?$/,function(m){return fill('nhab',[m[1]])}],
+  [/^(\d+) workouts?$/,function(m){return fill('nwk',[m[1]])}],
+  [/^(\d+) days? logged$/,function(m){return fill('ndl',[m[1]])}],
+  [/^(\d+) days?$/,function(m){return fill(m[1]==='1'?'day1':'dayn',[m[1]])}],
+  [/^(\d+) yrs$/,function(m){return fill('yrs',[m[1]])}],
+  [/^(\S+) overview$/,function(m){return fill('ov',[m[1]])}],
+  [/^(\S+) so far$/,function(m){return fill('sofar',[m[1]])}],
+  [/^Synced (.+)$/,function(m){return fill('synced',[m[1]])}],
+  [/^Same as (.+)$/,function(m){return fill('same',[m[1]])}],
+  [/^([↑↓]\d+) vs (.+)$/,function(m){return fill('vs',[m[1],m[2]])}],
+  [/^Not scheduled this day: (.+)$/,function(m){return fill('nsched',[m[1]])}],
+  [/^Paused since (.+)$/,function(m){return fill('psince',[m[1]])}],
+  [/^Archived (\d.+)$/,function(m){return fill('arch',[m[1]])}],
+  [/^Renamed from “(.+)”$/,function(m){return fill('ren',[m[1]])}],
+  [/^Goal set to (.+)$/,function(m){return fill('gset',[m[1]])}],
+  [/^Start date set to (.+)$/,function(m){return fill('sset',[m[1]])}],
+  [/^Unit set to (.+)$/,function(m){return fill('uset',[m[1]])}],
+  [/^Repeat days: (.+)$/,function(m){return fill('rep',[trS(m[1])])}],
+  [/^Delete “(.+)”\?$/,function(m){return fill('del',[m[1]])}],
+  [/^Goal (.+)$/,function(m){return fill('goal',[m[1]])}],
+  [/^Answer (\d+)$/,function(m){return fill('ans',[m[1]])}],
+  [/^(\d+) selected$/,function(m){return fill('nsel',[m[1]])}],
+  [/^The backup has (\d+) habits and (\d+) logged days\./,function(m){return fill('bk',[m[1],m[2]])}],
+  [/^(.+) in (\S+)$/,function(m){if(!/^\d{4}$/.test(m[2])&&!isMon(m[2]))return null;return fill('in',[hasK(m[1])?TRL[m[1]]:m[1],m[2]])}]
+];
+function isMon(x){x=x.toLowerCase();for(var i=0;i<12;i++){var d=new Date(2000,i,1);if(d.toLocaleDateString(LOC,{month:'long'}).toLowerCase()===x||d.toLocaleDateString(LOC,{month:'short'}).replace('.','').toLowerCase()===x)return true}return false}
+function trS(t){
+  if(!TRL)return t;
+  if(hasK(t))return TRL[t];
+  for(var i=0;i<PATS.length;i++){var m=t.match(PATS[i][0]);if(m){var r=PATS[i][1](m);if(r!=null)return r}}
+  if(t.indexOf(' · ')>-1)return t.split(' · ').map(trS).join(' · ');
+  if(t.indexOf(', ')>-1){var ps=t.split(', ');if(ps.every(hasK))return ps.map(trS).join(', ')}
+  if(/[A-Za-z]{2}/.test(t))MISS[t]=1;
+  return t;
+}
+function skipEl(el){return el&&el.closest&&el.closest('textarea,.notr,[translate="no"]')}
+function trNode(n){
+  if(!TRL)return;
+  if(n.nodeType===3){
+    if(skipEl(n.parentNode))return;
+    var v=n.nodeValue,k=v.trim();if(!k)return;var r=trS(k);if(r!==k)n.nodeValue=v.replace(k,r);return;
+  }
+  if(n.nodeType!==1||skipEl(n))return;
+  var els=[n].concat(Array.prototype.slice.call(n.querySelectorAll('[placeholder],[aria-label]')));
+  els.forEach(function(e){['placeholder','aria-label'].forEach(function(a){var v=e.getAttribute&&e.getAttribute(a);if(v){var r=trS(v);if(r!==v)e.setAttribute(a,r)}})});
+  var w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT,null),x,list=[];
+  while((x=w.nextNode()))list.push(x);
+  list.forEach(trNode);
+}
+if(TRL){
+  new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(trNode)})}).observe(document.body,{childList:true,subtree:true});
+}
+window.__i18n={miss:MISS,tr:trS};
 
 render();
 sync();
